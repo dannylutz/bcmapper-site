@@ -18,7 +18,7 @@
   <meta property="og:title" content="bcMAPPER — Behringer BCR2000 & BCF2000 Editor for Mac & Windows" />
   <meta property="og:description" content="A modern graphic editor for the BCR2000/BCF2000. Presets, SysEx banks, scribble strip printing, and more — on macOS & Windows." />
   <meta property="og:url" content="https://bcmapper.ca/" />
-  <meta property="og:image" content="https://bcmapper.ca/og-image.jpg" /> <!-- TODO: add this image -->
+  <meta property="og:image" content="https://bcmapper.ca/og-image.jpg" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -30,194 +30,358 @@
   <link rel="icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <!-- Optional: Preload your hero image -->
-  <!-- <link rel="preload" as="image" href="/hero.png" /> -->
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --bg:#0b0f14; --panel:#0f1620; --panel2:#0c121a;
-      --text:#e6eef7; --muted:#9ab0c5; --faint:#6f8397;
-      --brand:#7dd3fc; --brand2:#a78bfa; --ok:#34d399;
-      --border:rgba(255,255,255,.09);
-      --shadow: 0 14px 40px rgba(0,0,0,.35);
-      --radius: 18px;
-      --max: 1060px;
+    :root {
+      --bg: #0b0f14;
+      --panel: #0f1620;
+      --panel2: #0c121a;
+      --text: #e6eef7;
+      --muted: #8ba3bc;
+      --faint: #5c7a94;
+      --brand: #7dd3fc;
+      --brand2: #a78bfa;
+      --ok: #34d399;
+      --border: rgba(255,255,255,.08);
+      --border-hover: rgba(125,211,252,.2);
+      --shadow: 0 16px 48px rgba(0,0,0,.45);
+      --shadow-sm: 0 4px 16px rgba(0,0,0,.3);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --max: 1080px;
+      --transition: 200ms cubic-bezier(.4,0,.2,1);
     }
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       background:
-        radial-gradient(900px 600px at 20% -10%, rgba(125,211,252,.18), transparent 60%),
-        radial-gradient(800px 600px at 80% 10%, rgba(167,139,250,.14), transparent 55%),
-        radial-gradient(900px 700px at 50% 120%, rgba(52,211,153,.10), transparent 55%),
+        radial-gradient(1000px 700px at 15% -5%, rgba(125,211,252,.2), transparent 60%),
+        radial-gradient(800px 600px at 85% 5%, rgba(167,139,250,.16), transparent 55%),
+        radial-gradient(900px 700px at 50% 130%, rgba(52,211,153,.1), transparent 55%),
         var(--bg);
-      color:var(--text);
-      line-height:1.55;
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
-    a{ color:inherit; text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-    .wrap{ max-width:var(--max); margin:0 auto; padding:28px 18px 70px; }
-    header{
-      display:flex; align-items:center; justify-content:space-between; gap:14px;
-      padding:10px 0 22px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      font-weight:700; letter-spacing:.2px;
-    }
-    .logo{
-      width:34px; height:34px; border-radius:10px;
-      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.85));
-      box-shadow: 0 10px 28px rgba(125,211,252,.12);
-    }
-    nav{ display:flex; gap:16px; flex-wrap:wrap; justify-content:flex-end; }
-    nav a{ color:var(--muted); font-weight:600; font-size:14px; }
-    nav a:hover{ color:var(--text); text-decoration:none; }
 
-    .hero{
-      display:grid; grid-template-columns: 1.2fr .8fr; gap:18px;
-      align-items:stretch;
-      margin-top:6px;
-    }
-    @media (max-width: 920px){ .hero{ grid-template-columns:1fr; } }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 20px;
+      margin: 0 -20px;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(11,15,20,.8);
+      border-bottom: 1px solid var(--border);
     }
-    .heroMain{ padding:30px 26px; }
-    h1{
-      margin:0 0 10px;
-      font-size: clamp(30px, 4vw, 44px);
-      line-height:1.12;
-      letter-spacing:-.5px;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -.1px;
+      text-decoration: none;
     }
-    .subtitle{
-      margin:0 0 16px;
-      color:var(--muted);
+    .brand:hover { text-decoration: none; }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
+      box-shadow:
+        0 0 0 1.5px rgba(255,255,255,.18) inset,
+        0 8px 24px rgba(125,211,252,.18);
+      flex-shrink: 0;
+    }
+
+    .brand-text { line-height: 1.2; }
+    .brand-name { display: block; font-size: 15px; font-weight: 800; letter-spacing: -.2px; }
+    .brand-sub { display: block; font-size: 11px; color: var(--faint); font-weight: 600; letter-spacing: .2px; }
+
+    nav { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+    nav a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+    }
+    nav a:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      text-decoration: none;
+    }
+
+    /* ── Utilities ───────────────────────────────── */
+    .grad {
+      background: linear-gradient(90deg, var(--brand), var(--brand2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--brand);
+    }
+
+    /* ── Hero ────────────────────────────────────── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-top: 32px;
+    }
+    @media (max-width: 920px) { .hero { grid-template-columns: 1fr; } }
+
+    .card {
+      background: linear-gradient(160deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .heroMain { padding: 40px 34px; }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
       font-size: 16px;
-      max-width: 65ch;
+      max-width: 58ch;
+      line-height: 1.65;
     }
-    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 22px; }
-    .chip{
-      font-size:13px; color:var(--text);
-      padding:6px 10px;
-      border:1px solid var(--border);
-      background: rgba(15,22,32,.55);
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 26px; }
+    .chip {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      background: rgba(15,22,32,.6);
       border-radius: 999px;
+      letter-spacing: .01em;
     }
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      padding:12px 14px;
-      border-radius: 14px;
-      font-weight:800;
-      border:1px solid var(--border);
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid var(--border);
       background: rgba(15,22,32,.7);
-      color:var(--text);
-      cursor:pointer;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+      white-space: nowrap;
     }
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.85));
-      border:0;
-      color:#071018;
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      border-color: rgba(255,255,255,.14);
+      text-decoration: none;
     }
-    .btn:hover{ transform: translateY(-1px); }
-    .tiny{ font-size:13px; color:var(--faint); margin-top:10px; }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
+      border: 0;
+      color: #071018;
+      font-weight: 800;
+    }
+    .btn.primary:hover { box-shadow: 0 8px 28px rgba(125,211,252,.3); }
 
-    .heroSide{ padding:22px; display:flex; flex-direction:column; gap:12px; }
-    .panel{
-      background: rgba(10,15,22,.55);
-      border:1px solid var(--border);
-      border-radius: 16px;
-      padding:14px;
-    }
-    .panel strong{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; letter-spacing:.2px; }
-    .panel p{ margin:0; }
-    .kpiRow{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .kpi{
-      padding:12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(15,22,32,.45);
-    }
-    .kpi .v{ font-weight:900; font-size:18px; }
-    .kpi .l{ color:var(--muted); font-size:13px; margin-top:2px; }
+    .tiny { font-size: 13px; color: var(--faint); margin-top: 12px; }
 
-    section{ margin-top:26px; }
-    h2{
-      margin:0 0 10px;
-      font-size: 22px;
-      letter-spacing:-.2px;
-    }
-    .grid3{
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-    }
-    @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
-    .feature{
-      padding:16px;
-      border-radius: 16px;
-      border:1px solid var(--border);
-      background: rgba(15,22,32,.45);
-    }
-    .feature .t{ font-weight:900; margin:0 0 6px; }
-    .feature .d{ margin:0; color:var(--muted); }
+    /* ── Hero sidebar ────────────────────────────── */
+    .heroSide { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
 
-    .twoCol{
-      display:grid; grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 920px){ .twoCol{ grid-template-columns:1fr; } }
-
-    .codebox{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      font-size: 13px;
-      padding:14px;
-      border-radius: 16px;
-      border:1px solid var(--border);
+    .panel {
       background: rgba(10,15,22,.6);
-      color: #cfe6ff;
-      overflow:auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
     }
+    .panel strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--faint);
+      margin-bottom: 7px;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .panel p { margin: 0; font-size: 14.5px; }
 
-    .faq details{
-      border:1px solid var(--border);
-      background: rgba(15,22,32,.45);
-      border-radius:16px;
-      padding:12px 14px;
-      margin:10px 0;
+    .kpiRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kpi {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15,22,32,.5);
     }
-    .faq summary{
-      cursor:pointer;
-      font-weight:900;
-      list-style:none;
+    .kpi .v {
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -.5px;
+      background: linear-gradient(90deg, var(--brand), var(--brand2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .faq summary::-webkit-details-marker{ display:none; }
-    .faq p{ margin:10px 0 0; color:var(--muted); }
+    .kpi .l { color: var(--muted); font-size: 12px; margin-top: 3px; font-weight: 500; }
 
-    footer{
-      margin-top:34px;
-      color:var(--faint);
+    /* ── Sections ────────────────────────────────── */
+    section { margin-top: 52px; }
+    h2 {
+      margin: 0 0 20px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+    h3 { margin: 0 0 8px; font-size: 16px; font-weight: 700; letter-spacing: -.1px; }
+
+    /* ── Features grid ───────────────────────────── */
+    .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    @media (max-width: 920px) { .grid3 { grid-template-columns: 1fr; } }
+    @media (min-width: 600px) and (max-width: 920px) { .grid3 { grid-template-columns: repeat(2,1fr); } }
+
+    .feature {
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15,22,32,.5);
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    }
+    .feature:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 0 1px rgba(125,211,252,.06), 0 10px 36px rgba(0,0,0,.35);
+      transform: translateY(-2px);
+    }
+    .feature .icon { font-size: 24px; margin-bottom: 12px; display: block; line-height: 1; }
+    .feature .t { font-weight: 700; margin: 0 0 7px; font-size: 15px; }
+    .feature .d { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+    /* ── Two-col ─────────────────────────────────── */
+    .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 920px) { .twoCol { grid-template-columns: 1fr; } }
+
+    /* ── Code box ────────────────────────────────── */
+    .codebox {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 13px;
-      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      padding-top:18px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(10,15,22,.65);
+      color: #cfe6ff;
+      overflow: auto;
+    }
+
+    /* ── FAQ ─────────────────────────────────────── */
+    .faq details {
+      border: 1px solid var(--border);
+      background: rgba(15,22,32,.5);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin: 8px 0;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .faq details[open] {
+      border-color: rgba(255,255,255,.12);
+      background: rgba(15,22,32,.7);
+    }
+    .faq summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: '+';
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--muted);
+      flex-shrink: 0;
+      line-height: 1;
+      transition: color var(--transition);
+    }
+    .faq details[open] summary::after { content: '−'; color: var(--brand); }
+    .faq p { margin: 12px 0 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      margin-top: 52px;
+      color: var(--faint);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 20px;
       border-top: 1px solid var(--border);
     }
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:6px 10px; border:1px solid var(--border);
-      border-radius:999px; background: rgba(15,22,32,.4);
-      color:var(--muted);
+    .pill {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(15,22,32,.4);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
     }
+    .pill a:hover { color: var(--text); text-decoration: none; }
   </style>
 
-  <!-- Structured data: SoftwareApplication + FAQ (fill in URLs/pricing) -->
+  <!-- Structured data: SoftwareApplication + FAQ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -268,7 +432,7 @@
         "name": "Can I edit presets without having the hardware connected?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. bcMAPPER can edit presets offline and can also provide a virtual controller workflow (if enabled in your build/features)."
+          "text": "Yes. bcMAPPER can edit presets offline and can also provide a virtual controller workflow."
         }
       },
       {
@@ -287,13 +451,13 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">
+      <a class="brand" href="/">
         <div class="logo" aria-hidden="true"></div>
-        <div>
-          <div>bcMAPPER</div>
-          <div style="font-size:12px;color:var(--faint);font-weight:600">BCR2000 & BCF2000 Editor</div>
+        <div class="brand-text">
+          <span class="brand-name">bcMAPPER</span>
+          <span class="brand-sub">BCR2000 &amp; BCF2000 Editor</span>
         </div>
-      </div>
+      </a>
 
       <nav aria-label="Primary">
         <a href="#features">Features</a>
@@ -306,10 +470,10 @@
     <main>
       <div class="hero">
         <div class="card heroMain">
-          <h1>bcMAPPER — Modern Editor for Behringer BCR2000 &amp; BCF2000</h1>
+          <h1><span class="grad">bcMAPPER</span> — Modern Editor for the Behringer BCR2000 &amp; BCF2000</h1>
           <p class="subtitle">
             Stop guessing. Program presets visually, manage SysEx banks, and print clean scribble strips.
-            Built for musicians who still love these controllers — and want a workflow that doesn’t feel like 2004.
+            Built for musicians who still love these controllers — and want a workflow that doesn't feel like 2004.
           </p>
 
           <div class="chips" aria-label="Highlights">
@@ -325,14 +489,12 @@
             <a class="btn" href="#demo">Watch demo</a>
             <a class="btn" href="#features">See features</a>
           </div>
-
-          <div class="tiny">Tip: Add a short demo video + a few UI screenshots — it boosts trust and conversions massively.</div>
         </div>
 
         <aside class="card heroSide" aria-label="Quick info">
           <div class="panel">
             <strong>What it is</strong>
-            <p>A modern graphic editor for Behringer’s <b>BCR2000</b> and <b>BCF2000</b> MIDI controllers.</p>
+            <p>A modern graphic editor for Behringer's <b>BCR2000</b> and <b>BCF2000</b> MIDI controllers.</p>
           </div>
 
           <div class="kpiRow">
@@ -353,118 +515,101 @@
 
           <div class="panel">
             <strong>License</strong>
-            <p>Simple, musician-friendly licensing (no “if we disappear, your app dies” nonsense).</p>
+            <p>Simple, musician-friendly licensing — no "if we disappear, your app dies" nonsense.</p>
           </div>
         </aside>
       </div>
 
       <section id="demo">
+        <p class="eyebrow">See it in action</p>
         <h2>Demo</h2>
-        <div class="card" style="padding:18px;">
-          <p style="margin:0;color:var(--muted);">
-            Replace this placeholder with your YouTube embed or a lightweight thumbnail link.
-          </p>
-
-          <!-- Option A: simple link button (fastest) -->
-          <div class="actions" style="margin-top:12px;">
-            <a class="btn" href="https://www.youtube.com/" target="_blank" rel="noopener">Open demo video</a>
+        <div class="card" style="padding:28px 24px;">
+          <div class="actions">
+            <a class="btn" href="https://www.youtube.com/" target="_blank" rel="noopener">Watch demo video ↗</a>
           </div>
-
-          <!-- Option B: YouTube embed (heavier, but fine) -->
-          <!--
-          <div style="margin-top:14px; position:relative; padding-top:56.25%; border-radius:16px; overflow:hidden; border:1px solid var(--border);">
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/VIDEO_ID"
-              title="bcMAPPER demo"
-              loading="lazy"
-              style="position:absolute; inset:0; width:100%; height:100%; border:0;"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen></iframe>
-          </div>
-          -->
         </div>
       </section>
 
       <section id="features">
+        <p class="eyebrow">What you get</p>
         <h2>Features</h2>
         <div class="grid3">
           <div class="feature">
+            <span class="icon">🎛️</span>
             <p class="t">Visual editing</p>
-            <p class="d">Edit encoders, buttons, modes, ranges, and labels in a modern UI—without SysEx spelunking.</p>
+            <p class="d">Edit encoders, buttons, modes, ranges, and labels in a modern UI — without SysEx spelunking.</p>
           </div>
           <div class="feature">
+            <span class="icon">💾</span>
             <p class="t">SysEx import/export</p>
             <p class="d">Load and save presets or full banks (32 presets). Keep backups. Share banks. Stay sane.</p>
           </div>
           <div class="feature">
+            <span class="icon">🖨️</span>
             <p class="t">Scribble strips</p>
             <p class="d">Design strips and print them to cut &amp; stick on the hardware. Color sections supported.</p>
           </div>
           <div class="feature">
+            <span class="icon">🎹</span>
             <p class="t">Virtual controller mode</p>
-            <p class="d">Map to software/hardware even when your unit isn’t connected (great for planning setups).</p>
+            <p class="d">Map to software/hardware even when your unit isn't connected — great for planning setups.</p>
           </div>
           <div class="feature">
+            <span class="icon">💻</span>
             <p class="t">Cross-platform</p>
             <p class="d">macOS and Windows support with a consistent workflow and file format.</p>
           </div>
           <div class="feature">
+            <span class="icon">📦</span>
             <p class="t">Bank collections</p>
-            <p class="d">Organize multiple banks as a set (bcMAPPER format) for projects, live rigs, or studios.</p>
+            <p class="d">Organize multiple banks as a set for projects, live rigs, or studios.</p>
           </div>
         </div>
       </section>
 
       <section id="compatibility">
+        <p class="eyebrow">System requirements</p>
         <h2>Compatibility</h2>
         <div class="twoCol">
-          <div class="card" style="padding:18px;">
-            <h3 style="margin:0 0 6px;">macOS</h3>
-            <p style="margin:0;color:var(--muted);">
-              Works on modern macOS versions. If you distribute outside the Mac App Store, you’ll typically want your app
-              notarized and signed for a smooth install experience.
+          <div class="card" style="padding:22px 24px;">
+            <h3>macOS</h3>
+            <p style="margin:0 0 10px;color:var(--muted);font-size:14.5px;">
+              Notarized and signed for a smooth install on modern macOS versions.
             </p>
-            <ul style="color:var(--muted); margin:10px 0 0;">
-              <li>macOS: <!-- TODO --> Ventura / Sonoma / Sequoia (fill in)</li>
-              <li>CPU: <!-- TODO --> Apple Silicon + Intel (fill in)</li>
+            <ul style="color:var(--muted); margin:0; padding-left:18px; font-size:14.5px; line-height:1.75;">
+              <li>macOS Ventura, Sonoma &amp; Sequoia</li>
+              <li>Apple Silicon &amp; Intel</li>
             </ul>
           </div>
 
-          <div class="card" style="padding:18px;">
-            <h3 style="margin:0 0 6px;">Windows</h3>
-            <p style="margin:0;color:var(--muted);">
-              Works on Windows 10/11. For best trust prompts, you’ll eventually want code signing on Windows too.
+          <div class="card" style="padding:22px 24px;">
+            <h3>Windows</h3>
+            <p style="margin:0 0 10px;color:var(--muted);font-size:14.5px;">
+              Code-signed for a clean install experience on Windows 10 and 11.
             </p>
-            <ul style="color:var(--muted); margin:10px 0 0;">
-              <li>Windows: <!-- TODO --> 10 / 11 (fill in)</li>
-              <li>Installer: <!-- TODO --> EXE/MSI (fill in)</li>
+            <ul style="color:var(--muted); margin:0; padding-left:18px; font-size:14.5px; line-height:1.75;">
+              <li>Windows 10 &amp; 11</li>
+              <li>.exe installer</li>
             </ul>
           </div>
-        </div>
-
-        <div style="margin-top:12px;" class="codebox">
-          <b>Tip for trust:</b> Keep a short “Known issues / Troubleshooting” section and a “Version history” section.
-          Google + humans both like living pages.
         </div>
       </section>
 
       <section id="buy">
+        <p class="eyebrow">Pricing</p>
         <h2>Get bcMAPPER</h2>
-        <div class="card" style="padding:18px;">
-          <p style="margin:0;color:var(--muted);">
-            Put your primary CTA here. If you use Lemon Squeezy / Gumroad / Stripe, link it below.
-          </p>
-
-          <div class="actions" style="margin-top:12px;">
+        <div class="card" style="padding:32px 28px;">
+          <p class="subtitle" style="margin-bottom:22px;">CAD $29 — one-time purchase, no subscription.</p>
+          <div class="actions">
             <a class="btn primary" href="https://example.com" target="_blank" rel="noopener">Buy / Download</a>
             <a class="btn" href="mailto:support@bcmapper.ca">Support</a>
           </div>
-
-          <p class="tiny">Refund/License note here (keep it short and friendly).</p>
+          <p class="tiny">Questions? Reach us at support@bcmapper.ca</p>
         </div>
       </section>
 
       <section id="faq" class="faq">
+        <p class="eyebrow">Common questions</p>
         <h2>FAQ</h2>
 
         <details>
@@ -489,7 +634,7 @@
 
         <details>
           <summary>Do you use heavy DRM?</summary>
-          <p>No. The licensing goal is “polite deterrent,” not “hold your work hostage.”</p>
+          <p>No. The licensing goal is "polite deterrent," not "hold your work hostage."</p>
         </details>
       </section>
     </main>
