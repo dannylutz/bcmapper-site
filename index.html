@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0f14" />
+
+  <!-- Primary SEO -->
+  <title>bcMAPPER — Behringer BCR2000 & BCF2000 Editor for Mac & Windows</title>
+  <meta name="description" content="bcMAPPER is a modern graphic editor for the Behringer BCR2000 and BCF2000. Program presets visually, manage SysEx banks, print scribble strips, and edit faster on macOS and Windows." />
+  <link rel="canonical" href="https://bcmapper.ca/" />
+
+  <!-- Indexing -->
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="bcMAPPER — Behringer BCR2000 & BCF2000 Editor for Mac & Windows" />
+  <meta property="og:description" content="A modern graphic editor for the BCR2000/BCF2000. Presets, SysEx banks, scribble strip printing, and more — on macOS & Windows." />
+  <meta property="og:url" content="https://bcmapper.ca/" />
+  <meta property="og:image" content="https://bcmapper.ca/og-image.jpg" /> <!-- TODO: add this image -->
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="bcMAPPER — BCR2000 & BCF2000 Editor" />
+  <meta name="twitter:description" content="Modern editor for Behringer BCR2000/BCF2000. Presets, SysEx, scribble strips, macOS & Windows." />
+  <meta name="twitter:image" content="https://bcmapper.ca/og-image.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Optional: Preload your hero image -->
+  <!-- <link rel="preload" as="image" href="/hero.png" /> -->
+
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#0f1620; --panel2:#0c121a;
+      --text:#e6eef7; --muted:#9ab0c5; --faint:#6f8397;
+      --brand:#7dd3fc; --brand2:#a78bfa; --ok:#34d399;
+      --border:rgba(255,255,255,.09);
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1060px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 600px at 20% -10%, rgba(125,211,252,.18), transparent 60%),
+        radial-gradient(800px 600px at 80% 10%, rgba(167,139,250,.14), transparent 55%),
+        radial-gradient(900px 700px at 50% 120%, rgba(52,211,153,.10), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    a{ color:inherit; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+    .wrap{ max-width:var(--max); margin:0 auto; padding:28px 18px 70px; }
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding:10px 0 22px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:700; letter-spacing:.2px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.85));
+      box-shadow: 0 10px 28px rgba(125,211,252,.12);
+    }
+    nav{ display:flex; gap:16px; flex-wrap:wrap; justify-content:flex-end; }
+    nav a{ color:var(--muted); font-weight:600; font-size:14px; }
+    nav a:hover{ color:var(--text); text-decoration:none; }
+
+    .hero{
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:18px;
+      align-items:stretch;
+      margin-top:6px;
+    }
+    @media (max-width: 920px){ .hero{ grid-template-columns:1fr; } }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .heroMain{ padding:30px 26px; }
+    h1{
+      margin:0 0 10px;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height:1.12;
+      letter-spacing:-.5px;
+    }
+    .subtitle{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size: 16px;
+      max-width: 65ch;
+    }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 22px; }
+    .chip{
+      font-size:13px; color:var(--text);
+      padding:6px 10px;
+      border:1px solid var(--border);
+      background: rgba(15,22,32,.55);
+      border-radius: 999px;
+    }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 14px;
+      border-radius: 14px;
+      font-weight:800;
+      border:1px solid var(--border);
+      background: rgba(15,22,32,.7);
+      color:var(--text);
+      cursor:pointer;
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.85));
+      border:0;
+      color:#071018;
+    }
+    .btn:hover{ transform: translateY(-1px); }
+    .tiny{ font-size:13px; color:var(--faint); margin-top:10px; }
+
+    .heroSide{ padding:22px; display:flex; flex-direction:column; gap:12px; }
+    .panel{
+      background: rgba(10,15,22,.55);
+      border:1px solid var(--border);
+      border-radius: 16px;
+      padding:14px;
+    }
+    .panel strong{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; letter-spacing:.2px; }
+    .panel p{ margin:0; }
+    .kpiRow{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .kpi{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(15,22,32,.45);
+    }
+    .kpi .v{ font-weight:900; font-size:18px; }
+    .kpi .l{ color:var(--muted); font-size:13px; margin-top:2px; }
+
+    section{ margin-top:26px; }
+    h2{
+      margin:0 0 10px;
+      font-size: 22px;
+      letter-spacing:-.2px;
+    }
+    .grid3{
+      display:grid; grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
+    .feature{
+      padding:16px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background: rgba(15,22,32,.45);
+    }
+    .feature .t{ font-weight:900; margin:0 0 6px; }
+    .feature .d{ margin:0; color:var(--muted); }
+
+    .twoCol{
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 920px){ .twoCol{ grid-template-columns:1fr; } }
+
+    .codebox{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      font-size: 13px;
+      padding:14px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background: rgba(10,15,22,.6);
+      color: #cfe6ff;
+      overflow:auto;
+    }
+
+    .faq details{
+      border:1px solid var(--border);
+      background: rgba(15,22,32,.45);
+      border-radius:16px;
+      padding:12px 14px;
+      margin:10px 0;
+    }
+    .faq summary{
+      cursor:pointer;
+      font-weight:900;
+      list-style:none;
+    }
+    .faq summary::-webkit-details-marker{ display:none; }
+    .faq p{ margin:10px 0 0; color:var(--muted); }
+
+    footer{
+      margin-top:34px;
+      color:var(--faint);
+      font-size: 13px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      padding-top:18px;
+      border-top: 1px solid var(--border);
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; background: rgba(15,22,32,.4);
+      color:var(--muted);
+    }
+  </style>
+
+  <!-- Structured data: SoftwareApplication + FAQ (fill in URLs/pricing) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "bcMAPPER",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": ["macOS", "Windows"],
+    "description": "Modern graphic editor for the Behringer BCR2000 and BCF2000. Program presets visually, manage SysEx banks, and print scribble strips.",
+    "url": "https://bcmapper.ca/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Full Crystal",
+      "url": "https://www.full-crystal.com/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "CAD",
+      "price": "29.00",
+      "availability": "https://schema.org/InStock",
+      "url": "https://bcmapper.ca/#buy"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is there a software editor for the Behringer BCR2000?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. bcMAPPER is a modern editor for creating and managing BCR2000 presets visually, including SysEx import/export and bank management."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does bcMAPPER work on macOS and Windows?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "bcMAPPER supports macOS and Windows. Check the Compatibility section for specific OS versions and CPU notes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I edit presets without having the hardware connected?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. bcMAPPER can edit presets offline and can also provide a virtual controller workflow (if enabled in your build/features)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I send presets to the BCR2000/BCF2000?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "bcMAPPER exports standard SysEx. You can send SysEx to the hardware using your preferred MIDI/SysEx tool or directly within bcMAPPER if supported."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div>bcMAPPER</div>
+          <div style="font-size:12px;color:var(--faint);font-weight:600">BCR2000 & BCF2000 Editor</div>
+        </div>
+      </div>
+
+      <nav aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#compatibility">Compatibility</a>
+        <a href="#faq">FAQ</a>
+        <a href="#buy">Get it</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <div class="card heroMain">
+          <h1>bcMAPPER — Modern Editor for Behringer BCR2000 &amp; BCF2000</h1>
+          <p class="subtitle">
+            Stop guessing. Program presets visually, manage SysEx banks, and print clean scribble strips.
+            Built for musicians who still love these controllers — and want a workflow that doesn’t feel like 2004.
+          </p>
+
+          <div class="chips" aria-label="Highlights">
+            <span class="chip">macOS + Windows</span>
+            <span class="chip">Preset + Bank workflow</span>
+            <span class="chip">SysEx import/export</span>
+            <span class="chip">Scribble strip printing</span>
+            <span class="chip">Virtual controller mode</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="#buy">Download / Buy</a>
+            <a class="btn" href="#demo">Watch demo</a>
+            <a class="btn" href="#features">See features</a>
+          </div>
+
+          <div class="tiny">Tip: Add a short demo video + a few UI screenshots — it boosts trust and conversions massively.</div>
+        </div>
+
+        <aside class="card heroSide" aria-label="Quick info">
+          <div class="panel">
+            <strong>What it is</strong>
+            <p>A modern graphic editor for Behringer’s <b>BCR2000</b> and <b>BCF2000</b> MIDI controllers.</p>
+          </div>
+
+          <div class="kpiRow">
+            <div class="kpi">
+              <div class="v">32</div>
+              <div class="l">Presets per bank</div>
+            </div>
+            <div class="kpi">
+              <div class="v">228mm</div>
+              <div class="l">Strip print length</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <strong>Made by</strong>
+            <p><a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a> — tools for musicians &amp; weirdly beloved hardware.</p>
+          </div>
+
+          <div class="panel">
+            <strong>License</strong>
+            <p>Simple, musician-friendly licensing (no “if we disappear, your app dies” nonsense).</p>
+          </div>
+        </aside>
+      </div>
+
+      <section id="demo">
+        <h2>Demo</h2>
+        <div class="card" style="padding:18px;">
+          <p style="margin:0;color:var(--muted);">
+            Replace this placeholder with your YouTube embed or a lightweight thumbnail link.
+          </p>
+
+          <!-- Option A: simple link button (fastest) -->
+          <div class="actions" style="margin-top:12px;">
+            <a class="btn" href="https://www.youtube.com/" target="_blank" rel="noopener">Open demo video</a>
+          </div>
+
+          <!-- Option B: YouTube embed (heavier, but fine) -->
+          <!--
+          <div style="margin-top:14px; position:relative; padding-top:56.25%; border-radius:16px; overflow:hidden; border:1px solid var(--border);">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/VIDEO_ID"
+              title="bcMAPPER demo"
+              loading="lazy"
+              style="position:absolute; inset:0; width:100%; height:100%; border:0;"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+          -->
+        </div>
+      </section>
+
+      <section id="features">
+        <h2>Features</h2>
+        <div class="grid3">
+          <div class="feature">
+            <p class="t">Visual editing</p>
+            <p class="d">Edit encoders, buttons, modes, ranges, and labels in a modern UI—without SysEx spelunking.</p>
+          </div>
+          <div class="feature">
+            <p class="t">SysEx import/export</p>
+            <p class="d">Load and save presets or full banks (32 presets). Keep backups. Share banks. Stay sane.</p>
+          </div>
+          <div class="feature">
+            <p class="t">Scribble strips</p>
+            <p class="d">Design strips and print them to cut &amp; stick on the hardware. Color sections supported.</p>
+          </div>
+          <div class="feature">
+            <p class="t">Virtual controller mode</p>
+            <p class="d">Map to software/hardware even when your unit isn’t connected (great for planning setups).</p>
+          </div>
+          <div class="feature">
+            <p class="t">Cross-platform</p>
+            <p class="d">macOS and Windows support with a consistent workflow and file format.</p>
+          </div>
+          <div class="feature">
+            <p class="t">Bank collections</p>
+            <p class="d">Organize multiple banks as a set (bcMAPPER format) for projects, live rigs, or studios.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="compatibility">
+        <h2>Compatibility</h2>
+        <div class="twoCol">
+          <div class="card" style="padding:18px;">
+            <h3 style="margin:0 0 6px;">macOS</h3>
+            <p style="margin:0;color:var(--muted);">
+              Works on modern macOS versions. If you distribute outside the Mac App Store, you’ll typically want your app
+              notarized and signed for a smooth install experience.
+            </p>
+            <ul style="color:var(--muted); margin:10px 0 0;">
+              <li>macOS: <!-- TODO --> Ventura / Sonoma / Sequoia (fill in)</li>
+              <li>CPU: <!-- TODO --> Apple Silicon + Intel (fill in)</li>
+            </ul>
+          </div>
+
+          <div class="card" style="padding:18px;">
+            <h3 style="margin:0 0 6px;">Windows</h3>
+            <p style="margin:0;color:var(--muted);">
+              Works on Windows 10/11. For best trust prompts, you’ll eventually want code signing on Windows too.
+            </p>
+            <ul style="color:var(--muted); margin:10px 0 0;">
+              <li>Windows: <!-- TODO --> 10 / 11 (fill in)</li>
+              <li>Installer: <!-- TODO --> EXE/MSI (fill in)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;" class="codebox">
+          <b>Tip for trust:</b> Keep a short “Known issues / Troubleshooting” section and a “Version history” section.
+          Google + humans both like living pages.
+        </div>
+      </section>
+
+      <section id="buy">
+        <h2>Get bcMAPPER</h2>
+        <div class="card" style="padding:18px;">
+          <p style="margin:0;color:var(--muted);">
+            Put your primary CTA here. If you use Lemon Squeezy / Gumroad / Stripe, link it below.
+          </p>
+
+          <div class="actions" style="margin-top:12px;">
+            <a class="btn primary" href="https://example.com" target="_blank" rel="noopener">Buy / Download</a>
+            <a class="btn" href="mailto:support@bcmapper.ca">Support</a>
+          </div>
+
+          <p class="tiny">Refund/License note here (keep it short and friendly).</p>
+        </div>
+      </section>
+
+      <section id="faq" class="faq">
+        <h2>FAQ</h2>
+
+        <details>
+          <summary>Is bcMAPPER a BCR2000 editor for Mac?</summary>
+          <p>Yes. bcMAPPER is designed to be a modern editor for BCR2000 presets and banks on macOS.</p>
+        </details>
+
+        <details>
+          <summary>Does it also support the BCF2000?</summary>
+          <p>Yes — bcMAPPER supports both the Behringer BCR2000 and BCF2000.</p>
+        </details>
+
+        <details>
+          <summary>Can I import and export SysEx?</summary>
+          <p>Yes. bcMAPPER supports importing and exporting SysEx for presets and full banks (32 presets).</p>
+        </details>
+
+        <details>
+          <summary>Can I print scribble strips?</summary>
+          <p>Yes. You can generate printable scribble strips sized for the hardware and include color sections.</p>
+        </details>
+
+        <details>
+          <summary>Do you use heavy DRM?</summary>
+          <p>No. The licensing goal is “polite deterrent,” not “hold your work hostage.”</p>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <div class="pill">© <span id="y"></span> bcMAPPER</div>
+      <div class="pill">
+        <a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a>
+        <span aria-hidden="true">·</span>
+        <a href="mailto:support@bcmapper.ca">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
