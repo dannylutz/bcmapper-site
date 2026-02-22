@@ -357,14 +357,18 @@
     /* ── Footer ──────────────────────────────────── */
     footer {
       margin-top: 52px;
-      color: var(--faint);
-      font-size: 13px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .footer-row {
       display: flex;
       justify-content: space-between;
       gap: 10px;
       flex-wrap: wrap;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
+      align-items: center;
     }
     .pill {
       display: inline-flex;
@@ -379,6 +383,12 @@
       font-weight: 500;
     }
     .pill a:hover { color: var(--text); text-decoration: none; }
+    .disclaimer {
+      margin: 0;
+      font-size: 11px;
+      color: var(--faint);
+      line-height: 1.65;
+    }
   </style>
 
   <!-- Structured data: SoftwareApplication + FAQ -->
@@ -640,12 +650,20 @@
     </main>
 
     <footer>
-      <div class="pill">© <span id="y"></span> bcMAPPER</div>
-      <div class="pill">
-        <a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a>
-        <span aria-hidden="true">·</span>
-        <a href="mailto:support@bcmapper.ca">Contact</a>
+      <div class="footer-row">
+        <div class="pill">© <span id="y"></span> bcMAPPER</div>
+        <div class="pill">
+          <a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a>
+          <span aria-hidden="true">·</span>
+          <a href="mailto:support@bcmapper.ca">Contact</a>
+        </div>
       </div>
+      <p class="disclaimer">
+        bcMAPPER is independent software developed by <a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a> and is not affiliated with, endorsed by, or sponsored by Music Tribe or Behringer.
+        Behringer, BCR2000, and BCF2000 are trademarks of Music Tribe IP Ltd.
+        Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries.
+        Windows is a registered trademark of Microsoft Corporation.
+      </p>
     </footer>
   </div>
 
