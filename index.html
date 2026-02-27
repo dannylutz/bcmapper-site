@@ -15,6 +15,8 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="bcMAPPER" />
+  <meta property="og:locale" content="en_CA" />
   <meta property="og:title" content="bcMAPPER — Behringer BCR2000 & BCF2000 Editor for Mac & Windows" />
   <meta property="og:description" content="A modern graphic editor for the BCR2000/BCF2000. Presets, SysEx banks, scribble strip printing, and more — on macOS & Windows." />
   <meta property="og:url" content="https://bcmapper.ca/" />
@@ -299,7 +301,7 @@
       transform: translateY(-2px);
     }
     .feature .icon { font-size: 24px; margin-bottom: 12px; display: block; line-height: 1; }
-    .feature .t { font-weight: 700; margin: 0 0 7px; font-size: 15px; }
+    .feature h3 { font-weight: 700; margin: 0 0 7px; font-size: 15px; letter-spacing: -.1px; }
     .feature .d { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
 
     /* ── Two-col ─────────────────────────────────── */
@@ -444,7 +446,7 @@
     "offers": {
       "@type": "Offer",
       "priceCurrency": "CAD",
-      "price": "29.00",
+      "price": "19.00",
       "availability": "https://schema.org/InStock",
       "url": "https://bcmapper.ca/#buy"
     }
@@ -458,34 +460,42 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Is there a software editor for the Behringer BCR2000?",
+        "name": "Is bcMAPPER a BCR2000 editor for Mac as well?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. bcMAPPER is a modern editor for creating and managing BCR2000 presets visually, including SysEx import/export and bank management."
+          "text": "Yes. bcMAPPER is designed to be a modern editor for BCR2000 presets and banks on macOS and Windows. A Linux build is coming very soon too!"
         }
       },
       {
         "@type": "Question",
-        "name": "Does bcMAPPER work on macOS and Windows?",
+        "name": "Does it also support the BCF2000?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "bcMAPPER supports macOS and Windows. Check the Compatibility section for specific OS versions and CPU notes."
+          "text": "Yes — bcMAPPER supports both the Behringer BCR2000 and BCF2000."
         }
       },
       {
         "@type": "Question",
-        "name": "Can I edit presets without having the hardware connected?",
+        "name": "Can I import and export SysEx?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. bcMAPPER can edit presets offline and can also provide a virtual controller workflow."
+          "text": "Yes. bcMAPPER supports importing and exporting SysEx for presets and full banks (32 presets)."
         }
       },
       {
         "@type": "Question",
-        "name": "How do I send presets to the BCR2000/BCF2000?",
+        "name": "Can I print scribble strips?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "bcMAPPER exports standard SysEx. You can send SysEx to the hardware using your preferred MIDI/SysEx tool or directly within bcMAPPER if supported."
+          "text": "Yes. You can generate printable scribble strips sized for the hardware and include color sections."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you use heavy DRM?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The licensing goal is \"polite deterrent\", and we've priced it to be fairly accessible. If you are in a position that you can't afford to support the project, or are in a position to buy an extra copy for someone who can't, please let us know and we will match that and give two copies to those who are unable to afford it."
         }
       }
     ]
@@ -497,7 +507,7 @@
   <div class="beta-banner">
     <div class="beta-banner-inner">
       <p class="beta-banner-headline">This is the graphic editor the BCR2000 and BCF2000 should have had all along.</p>
-      <p class="beta-banner-body">bcMAPPER is now in public beta and is on offer for $19 CAD (regularly $29 CAD), use code BETA10 at checkout. It`s fully functional, stable, and ready for real work — with continued refinement ahead of version 1.0.</p>
+      <p class="beta-banner-body">bcMAPPER is now in public beta and is on offer for $19 CAD (regularly $29 CAD), use code BETA10 at checkout. It's fully functional, stable, and ready for real work — with continued refinement ahead of version 1.0.</p>
       <p class="beta-banner-cta">If you've been waiting years for an easier way to program these controllers, this is it.</p>
     </div>
   </div>
@@ -523,7 +533,7 @@
     <main>
       <div class="hero">
         <div class="card heroMain">
-          <h1><span class="grad">bcMAPPER (beta)</span> — Modern Editor for the Behringer BCR2000 &amp; BCF2000</h1>
+          <h1><span class="grad">bcMAPPER</span> — Visual Preset Editor for the Behringer BCR2000 &amp; BCF2000</h1>
           <p class="subtitle">
             Stop guessing. Program presets visually, manage SysEx banks, and print clean scribble strips.
             Built for musicians who still love these controllers — and want a workflow that doesn't feel like 2004.
@@ -584,32 +594,32 @@
         <div class="grid3">
           <div class="feature">
             <span class="icon">🎛️</span>
-            <p class="t">Visual editing</p>
+            <h3>Visual editing</h3>
             <p class="d">Edit encoders, buttons, modes, ranges, and labels in a modern UI — without SysEx spelunking.</p>
           </div>
           <div class="feature">
             <span class="icon">💾</span>
-            <p class="t">SysEx import/export</p>
+            <h3>SysEx import/export</h3>
             <p class="d">Load and save presets or full banks (32 presets). Keep backups. Share banks. Stay sane.</p>
           </div>
           <div class="feature">
             <span class="icon">🖨️</span>
-            <p class="t">Scribble strips</p>
+            <h3>Scribble strips</h3>
             <p class="d">Design strips and print them to cut &amp; stick on the hardware. Color sections supported.</p>
           </div>
           <div class="feature">
             <span class="icon">🎹</span>
-            <p class="t">Virtual controller mode</p>
+            <h3>Virtual controller mode</h3>
             <p class="d">Map to software/hardware even when your unit isn't connected — great for planning setups.</p>
           </div>
           <div class="feature">
             <span class="icon">💻</span>
-            <p class="t">Cross-platform</p>
+            <h3>Cross-platform</h3>
             <p class="d">macOS and Windows support with a consistent workflow and file format. Linux is coming in early-mid 2026!</p>
           </div>
           <div class="feature">
             <span class="icon">📦</span>
-            <p class="t">Bank collections</p>
+            <h3>Bank collections</h3>
             <p class="d">Organize multiple banks as a set for projects, live rigs, or studios.</p>
           </div>
         </div>
