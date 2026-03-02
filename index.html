@@ -29,8 +29,8 @@
   <meta name="twitter:image" content="https://bcmapper.ca/og-image.jpg" />
 
   <!-- Favicon -->
-  <link rel="icon" href="assets/bcmapper-favicon.png" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="icon" href="assets/bcmapper-favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/Logo-1.1.png" />
 
   <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -110,11 +110,9 @@
       width: 36px;
       height: 36px;
       border-radius: 10px;
-      background: linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%);
-      box-shadow:
-        0 0 0 1.5px rgba(255,255,255,.18) inset,
-        0 8px 24px rgba(125,211,252,.18);
+      box-shadow: 0 8px 24px rgba(125,211,252,.18);
       flex-shrink: 0;
+      object-fit: cover;
     }
 
     .brand-text { line-height: 1.2; }
@@ -564,7 +562,7 @@
   <div class="wrap">
     <header>
       <a class="brand" href="/">
-        <div class="logo" aria-hidden="true"></div>
+        <img src="assets/Logo-1.1.png" alt="bcMAPPER logo" class="logo" />
         <div class="brand-text">
           <span class="brand-name">bcMAPPER</span>
           <span class="brand-sub">BCR2000 &amp; BCF2000 Editor</span>
