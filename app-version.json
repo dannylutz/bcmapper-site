@@ -1,5 +1,5 @@
 {
-  "version": "0.8.3",
+  "version": "0.8.4",
   "releaseUrl": "https://drive.google.com/drive/folders/10M439vZ-o0e6cALKvwVZYHlbjNrkoTBc?usp=sharing",
-  "releaseNotes": "What's new in 0.8.3:\n- updated MIDI data interval on transmission window\n- added global profiles and option to include with bank dumps to hardware\n- added 14-bit CC modes for applicable controls"
+  "releaseNotes": "What's new in 0.8.4"
 }
