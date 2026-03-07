@@ -1,5 +1,11 @@
 {
-  "version": "0.8.4",
+  "version": "0.8.3",
   "releaseUrl": "https://drive.google.com/drive/folders/10M439vZ-o0e6cALKvwVZYHlbjNrkoTBc?usp=sharing",
-  "releaseNotes": "What's new in 0.8.4"
+  "releaseNotes": "Import/export BCL text, scribble fixes, light mode, download button fix.",
+  "changelog": [
+    "Import and export BCL text files",
+    "Scribble strip updates and print fix",
+    "Light mode added to preferences",
+    "Fixed download button for updates"
+  ]
 }
