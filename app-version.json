@@ -7,5 +7,7 @@
     "Scribble strip updates and print fix",
     "Light mode added to preferences",
     "Fixed download button for updates"
-  ]
+  ],
+  "docsVersion": "1.0.3",
+  "docsChangelog": "Shortcut corrections, menu reference fixes, and accuracy improvements throughout."
 }
