@@ -1,11 +1,12 @@
 {
-  "version": "0.8.4",
-  "releaseUrl": "https://drive.google.com/drive/folders/10M439vZ-o0e6cALKvwVZYHlbjNrkoTBc?usp=sharing",
-  "releaseNotes": "Import/export BCL text, scribble fixes, light mode, download button fix.",
+  "version": "0.8.5",
+  "releaseUrl": "https://drive.google.com/drive/folders/1LHozwQtIDld7kjUK8qQeWQpZ-oPAMvBb?usp=drive_link",
+  "releaseNotes": "Documentation fixes, copy/cut/duplicate/swap shortcuts, and docs update improvements",
   "changelog": [
-    "Import and export BCL text files",
-    "Scribble strip updates and print fix",
-    "Light mode added to preferences",
-    "Fixed download button for updates"
+    "Copy preset to any bank slot via context menu",
+    "Scribble strip grouping",
+    "Added cut, duplicate, and swap keyboard shortcuts",
+    "Documentation accuracy improvements and corrections",
+    "Fixed in-app documentation update check"
   ]
 }
