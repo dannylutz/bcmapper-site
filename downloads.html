@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Downloads — bcMAPPER</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/IMG_6278.jpeg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="assets/IMG_6278.jpeg" />
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #0f1620;
+      --text: #e6eef7;
+      --muted: #8ba3bc;
+      --faint: #5c7a94;
+      --brand: #7dd3fc;
+      --brand2: #a78bfa;
+      --ok: #34d399;
+      --border: rgba(255,255,255,.08);
+      --border-hover: rgba(125,211,252,.2);
+      --shadow: 0 16px 48px rgba(0,0,0,.45);
+      --shadow-sm: 0 4px 16px rgba(0,0,0,.3);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --max: 780px;
+      --transition: 200ms cubic-bezier(.4,0,.2,1);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(1000px 700px at 15% -5%, rgba(125,211,252,.2), transparent 60%),
+        radial-gradient(800px 600px at 85% 5%, rgba(167,139,250,.16), transparent 55%),
+        radial-gradient(900px 700px at 50% 130%, rgba(52,211,153,.1), transparent 55%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      margin: 0 -20px;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(11,15,20,.8);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -.1px;
+      text-decoration: none;
+    }
+    .brand:hover { text-decoration: none; }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(125,211,252,.18);
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    .brand-text { line-height: 1.2; }
+    .brand-name { display: block; font-size: 15px; font-weight: 800; letter-spacing: -.2px; }
+    .brand-sub  { display: block; font-size: 11px; color: var(--faint); font-weight: 600; letter-spacing: .2px; }
+
+    /* ── Page title ──────────────────────────────── */
+    .page-title { margin: 40px 0 32px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--brand);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -.5px;
+      line-height: 1.15;
+    }
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ── Release block ───────────────────────────── */
+    .release { margin-bottom: 28px; }
+    .release-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .release-version {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.2px;
+    }
+    .release-date {
+      font-size: 13px;
+      color: var(--faint);
+    }
+    .badge-latest {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #071018;
+      background: var(--brand);
+      border-radius: 999px;
+      padding: 2px 9px;
+      line-height: 1.6;
+    }
+
+    /* ── Changelog button ────────────────────────── */
+    .btn-changelog {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,22,32,.6);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+      font-family: inherit;
+    }
+    .btn-changelog:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+      background: rgba(15,22,32,.9);
+    }
+
+    /* ── Installer rows ──────────────────────────── */
+    .installer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .installer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(15,22,32,.5);
+      transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+      text-decoration: none;
+      color: var(--text);
+    }
+    .installer:hover {
+      border-color: var(--border-hover);
+      background: rgba(15,22,32,.75);
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+    }
+
+    .installer-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .installer-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
+    .installer-name { font-size: 14.5px; font-weight: 600; }
+    .installer-meta { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+    .installer-dl {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--brand);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── Divider / labels ────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin: 0 0 16px;
+    }
+
+    /* ── Changelog dialog ────────────────────────── */
+    dialog {
+      position: fixed;
+      inset: 0;
+      margin: auto;
+      width: min(520px, calc(100vw - 32px));
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      background: #0f1825;
+      color: var(--text);
+      box-shadow: 0 32px 80px rgba(0,0,0,.7);
+      padding: 0;
+      font-family: inherit;
+    }
+    dialog::backdrop {
+      background: rgba(0,0,0,.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .dialog-inner { padding: 28px 28px 24px; }
+
+    .dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .dialog-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.2px;
+    }
+    .dialog-title span {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--faint);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .btn-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background var(--transition), color var(--transition);
+      font-family: inherit;
+    }
+    .btn-close:hover { background: rgba(255,255,255,.1); color: var(--text); }
+
+    .changelog-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .changelog-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--muted);
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.05);
+    }
+    .changelog-list li::before {
+      content: '·';
+      color: var(--brand);
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      margin-top: 52px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .pill {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(15,22,32,.4);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .pill a:hover { color: var(--text); text-decoration: none; }
+    .disclaimer {
+      margin: 0;
+      font-size: 11px;
+      color: var(--faint);
+      line-height: 1.65;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="/">
+        <img src="assets/IMG_6278.jpeg" alt="bcMAPPER logo" class="logo" />
+        <div class="brand-text">
+          <span class="brand-name">bcMAPPER</span>
+          <span class="brand-sub">BCR2000 &amp; BCF2000 Editor</span>
+        </div>
+      </a>
+    </header>
+
+    <main>
+      <div class="page-title">
+        <p class="eyebrow">Installers</p>
+        <h1>Downloads</h1>
+        <p class="subtitle">Direct installer downloads for all versions of bcMAPPER.</p>
+      </div>
+
+      <!-- ── Current release ──────────────────────── -->
+      <p class="section-label">Current release</p>
+      <div class="release">
+        <div class="release-header">
+          <span class="release-version">v0.8.4</span>
+          <span class="badge-latest">Latest</span>
+          <span class="release-date">2025</span>
+          <button class="btn-changelog" onclick="openChangelog('0.8.4')">What's new ↗</button>
+        </div>
+        <div class="installer-list">
+          <a class="installer" href="https://download.bcmapper.ca/bcMAPPER_0.8.4_universal.dmg">
+            <div class="installer-info">
+              <span class="installer-icon"></span>
+              <div>
+                <div class="installer-name">macOS — Universal</div>
+                <div class="installer-meta">bcMAPPER_0.8.4_universal.dmg · Apple Silicon &amp; Intel · macOS 10.15+</div>
+              </div>
+            </div>
+            <span class="installer-dl">Download ↓</span>
+          </a>
+          <a class="installer" href="https://download.bcmapper.ca/bcMAPPER_0.8.4_x64-setup.exe">
+            <div class="installer-info">
+              <span class="installer-icon">🪟</span>
+              <div>
+                <div class="installer-name">Windows — x64</div>
+                <div class="installer-meta">bcMAPPER_0.8.4_x64-setup.exe · Windows 10 &amp; 11</div>
+              </div>
+            </div>
+            <span class="installer-dl">Download ↓</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Past releases ────────────────────────── -->
+      <hr class="divider" />
+      <p class="section-label">Past releases</p>
+      <!-- Add past .release blocks here as new versions ship. Example:
+      <div class="release">
+        <div class="release-header">
+          <span class="release-version">v0.8.3</span>
+          <span class="release-date">2025</span>
+          <button class="btn-changelog" onclick="openChangelog('0.8.3')">What's new ↗</button>
+        </div>
+        <div class="installer-list">
+          <a class="installer" href="https://download.bcmapper.ca/bcMAPPER_0.8.3_universal.dmg"> ... </a>
+          <a class="installer" href="https://download.bcmapper.ca/bcMAPPER_0.8.3_x64-setup.exe"> ... </a>
+        </div>
+      </div>
+      -->
+
+    </main>
+
+    <footer>
+      <div class="footer-row">
+        <div class="pill">© <span id="y"></span> bcMAPPER</div>
+        <div class="pill">
+          <a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a>
+          <span aria-hidden="true">·</span>
+          <a href="mailto:support@full-crystal.com">Contact</a>
+        </div>
+      </div>
+      <p class="disclaimer">
+        bcMAPPER is independent software developed by <a href="https://www.full-crystal.com/" rel="noopener">Full Crystal</a> and is not affiliated with, endorsed by, or sponsored by Music Tribe or Behringer.
+        Behringer, BCR2000, and BCF2000 are trademarks of Music Tribe IP Ltd.
+        Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries.
+        Windows is a registered trademark of Microsoft Corporation.
+      </p>
+    </footer>
+  </div>
+
+  <!-- ── Changelog dialog ──────────────────────────── -->
+  <dialog id="changelog-dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <div class="dialog-inner">
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="dialog-title">
+          <span>What's new</span>
+          <span id="dialog-version"></span>
+        </h2>
+        <button class="btn-close" onclick="closeChangelog()" aria-label="Close">✕</button>
+      </div>
+      <ul class="changelog-list" id="dialog-list"></ul>
+    </div>
+  </dialog>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // Changelog data keyed by version string.
+    // Add a new entry here whenever a new release ships.
+    const CHANGELOGS = {
+      "0.8.4": [
+        "Import and export BCL text files",
+        "Scribble strip updates and print fix",
+        "Light mode added to preferences",
+        "Fixed download button for updates"
+      ]
+    };
+
+    const dialog = document.getElementById("changelog-dialog");
+    const versionEl = document.getElementById("dialog-version");
+    const listEl = document.getElementById("dialog-list");
+
+    function openChangelog(version) {
+      const items = CHANGELOGS[version] || ["No changelog available."];
+      versionEl.textContent = "v" + version;
+      listEl.innerHTML = items.map(i => `<li>${i}</li>`).join("");
+      dialog.showModal();
+    }
+
+    function closeChangelog() {
+      dialog.close();
+    }
+
+    // Close on backdrop click
+    dialog.addEventListener("click", e => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    // Close on Escape (native dialog behaviour, but wire it up explicitly too)
+    dialog.addEventListener("cancel", e => e.preventDefault() || dialog.close());
+  </script>
+</body>
+</html>
