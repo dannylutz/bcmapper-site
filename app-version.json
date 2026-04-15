@@ -1,7 +1,7 @@
 {
   "version": "0.8.5",
   "releaseUrl": "https://bcmapper.ca/downloads.html",
-  "releaseNotes": "Many fixes and features. If the Download button isn't working here, please right-click the Download button and copy the link to paste URL in the browser. Thank you!",
+  "releaseNotes": "Many fixes and features. If the Download button isn't working here, please right-click the Download button and copy the link to paste URL in your browser. Thank you!",
   "changelog": [
     "BCL: added Snapshot option per preset for virtual mode - hardware still requires a manual press of EDIT + < to send snapshots",
     "BCL: added Lock option per preset — prevents accidental edits on the hardware",
