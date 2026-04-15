@@ -393,7 +393,7 @@
         <div class="release-header">
           <span class="release-version">v0.8.4</span>
           <span class="badge-latest">Latest</span>
-          <span class="release-date">2025</span>
+          <span class="release-date">April 02 2026</span>
           <button class="btn-changelog" onclick="openChangelog('0.8.4')">What's new ↗</button>
         </div>
         <div class="installer-list">
@@ -482,6 +482,40 @@
         "Scribble strip updates and print fix",
         "Light mode added to preferences",
         "Fixed download button for updates"
+      ],
+      "0.8.5": [
+        "BCL: added Snapshot option per preset for virtual mode - hardware still requires a manual press of EDIT + < to send snapshots",
+    "BCL: added Lock option per preset — prevents accidental edits on the hardware",
+    "BCL: added the option to send one or more controls to hardware without having to send entire preset",
+    "BCL: added Resolution field per encoder — controls MIDI steps per physical detent for coarse/fine tuning",
+    "BCL: fixed Program Change bank select (MSB/LSB) values being lost when re-importing BCL from hardware",
+    "Buttons: added Increment Mode selector — choose step value or number of steps (divided by 128)",
+    "Buttons: added Bank Select MSB and LSB fields for Program Change (standard and increment modes)",
+    "Buttons: fixed Increment mode generating incorrect BCL (now emits 'InC' instead of 'toFF')",
+    "Buttons: fixed Program Change not available as an Increment type",
+    "Virtual Mode: incoming MIDI now updates mapped controls in real time",
+    "Virtual Mode: MIDI feedback loop detection with modal warning and auto-disable",
+    "Virtual Mode: echo suppression prevents self-echoes on shared IAC buses",
+    "Virtual Mode: fixed button Momentary (press/release) sending extra messages",
+    "Virtual Mode: fixed button Increment mode sending wrong values",
+    "Virtual Mode: same-port warning toast when input and output share the same IAC bus",
+    "MIDI: added None option to input and output port selectors",
+    "MIDI: added MIDI reconnect button for recovering dropped IAC connections",
+    "MIDI: filtered MIDI clock and system real-time messages to reduce noise",
+    "MIDI: limited incoming MIDI visual update rate to ~30fps to prevent UI freezes",
+    "MIDI Monitor: auto-filters to show both directions in Virtual Mode",
+    "Custom Output: added .tx directive support for encoder, button, and fader SysEx output",
+    "Presets: prompt to save unsaved changes when navigating to a different preset or bank",
+    "Presets: fixed standalone preset loading while a bank is active",
+    "Presets: fixed default preset and banks to be the same as default Behringer files",
+    "Controller: removed browser context menus on controls",
+    "Controller: fixed knob rotation staying in sync with LED ring at extremes",
+    "Controller: fixed Preset Globals bug",
+    "CC increment defaults: switching a button to increment mode now defaults offValue to 127 and onValue to 0, matching the value order the hardware expects to step through the range correctly",
+    "Send/Receive port management: input port is automatically disconnected during Send to Hardware and reconnected immediately after, preventing SysEx echo and port conflicts. Output port is automatically disconnected during Receive from Hardware and reconnected after the session ends",
+    "Receive from Hardware reliability: each listening session now forces a fresh disconnect/reconnect of the input port before registering the handler, eliminating stale midir connections that previously required a manual port reset",
+    "Window opens maximized on launch",
+    "Added shortcuts for Virtual Mode toggle (cmd+shift+v), Receive from Hardware toggle (cmd+shift+V), Send to Hardware (cmd+Shift+S), and Receive from Hardware (cmd+Shift+R), and Preferences (cmd+,)"
       ]
     };
 
