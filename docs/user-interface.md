@@ -79,12 +79,42 @@ A dropdown of file operations:
 
 - **Documentation** — Opens the documentation in your browser
 - **Getting Started...** — Reopens the Welcome screen where you can set your save directory or import presets from hardware
-- **Preferences...** — Opens the Preferences panel:
-  - **Default Save Directory** — Where new presets and banks are auto-saved
-  - **Default Device Type** — BCR2000, BCF2000, or both; used to skip the device type prompt when creating new presets if you only use one
-  - **Default MIDI Ports** — What input and output ports to use by default, if present among available MIDI devices
+- **Preferences...** — Opens the Preferences panel. Settings are grouped into sections:
+  - **Hardware** — Which device(s) you own (BCR2000, BCF2000, or both). Used to pre-select the device type when creating new banks and presets, skipping the prompt when you only use one controller.
+  - **File Paths** — Where auto-saved files are written. The default is `~/Documents/BCMapper` on macOS/Linux and `Documents\BCMapper` on Windows; the folder is created automatically on first save. Enable **Use custom save location** and pick a folder to override. Also contains the **Back Up All Presets & Banks** button — see [Backup](#backup) below.
+  - **Default MIDI Ports** — The input and output ports to connect on startup. If a saved port isn't found when the app launches, bcMAPPER falls back to auto-detecting a BCR/BCF device. Enable **Auto-connect on startup** to have ports connected immediately without clicking Reconnect each session.
+  - **Updates** — Toggle automatic update checks. When enabled, bcMAPPER silently checks once per day and shows a banner in the toolbar if a newer version is available.
+  - **Appearance** — Switch between the default dark theme and a light theme.
 - **Check for Updates** — Check whether a newer version of bcMAPPER is available
 - **About bcMAPPER...** — License info, version details, and support contact
+
+#### Backup
+
+The **Back Up All Presets & Banks** button in Preferences → File Paths creates a single timestamped zip archive containing every bank and standalone preset currently in bcMAPPER.
+
+The zip is written to a `Backups/` subfolder inside your configured save location:
+
+```
+~/Documents/BCMapper/Backups/bcmapper-backup-2026-04-13-143022.zip
+```
+
+Inside the zip:
+
+```
+bcmapper-backup-2026-04-13-143022/
+  manifest.json          ← summary: bank/preset names, counts, creation date
+  banks/
+    My-Bank.json
+    Another-Bank.json
+  presets/
+    My-Standalone-Preset.json
+```
+
+Each file is the full bcMAPPER JSON for that bank or preset — the same format used by File → Save Bank to File. You can load any individual file back into bcMAPPER via File → Open Bank or File → Import Preset.
+
+A confirmation toast appears when the backup completes, showing how many banks and presets were included and the last few path segments so you know exactly where the file landed.
+
+> **Where is my data normally stored?** Banks and presets live in bcMAPPER's internal app storage (WebKit localStorage), not in the file folder. The save folder and the Backups folder contain *copies* written at specific moments — they are not the live source of truth. The backup button is the fastest way to export everything at once.
 
 ### Hardware Menu
 
@@ -101,7 +131,11 @@ A dropdown of file operations:
 
 ### Device Selector
 
-Separate dropdowns for **Input** and **Output** MIDI devices. The connection status indicator shows whether bcMAPPER has an active link to the hardware. A **refresh icon** re-scans for newly connected or disconnected devices.
+Separate dropdowns for **Input** and **Output** MIDI devices. The connection status indicator shows whether bcMAPPER has an active link to the hardware.
+
+- **None** — Both dropdowns include a **None** option. Selecting None disconnects that direction without affecting the other. This is useful in Virtual Mode when you want to route output to a softsynth via IAC without simultaneously receiving hardware input (which could cause a feedback loop).
+- **Refresh** (↺ icon) — Re-scans for newly connected or disconnected devices.
+- **Reconnect** (plug icon) — Attempts to re-establish the connection to the currently selected port without switching devices. Use this when an IAC bus or virtual port silently drops — a common occurrence after waking from sleep or reconnecting audio interfaces.
 
 ---
 
@@ -125,7 +159,7 @@ Independent presets not attached to any bank. Listed **newest-first** by creatio
 
 Each bank holds up to 32 preset slots. Click a bank name to expand or collapse its slot list.
 
-**Loading a bank:** Click the **Load** link next to a bank name, or right-click and choose **Load Bank**. bcMAPPER will ask you to confirm (to avoid accidentally leaving unsaved work behind), then switch the active bank, expand it in the sidebar, and load slot 1.
+**Loading a bank:** Click the **Load** link next to a bank name, or right-click and choose **Load Bank**. If there are unsaved changes to the current preset, bcMAPPER will prompt you to **Save & Continue**, **Discard**, or **Cancel** before proceeding. After any unsaved changes are resolved, it switches the active bank, expands it in the sidebar, and loads slot 1.
 
 **Factory banks** are pinned to the bottom of the bank list. They're auto-restored on launch if they've been deleted. They're fully editable — but you can always restore any slot to its original factory state.
 
@@ -247,6 +281,7 @@ The Parameter Panel lives on the right side of the screen. In **Edit Mode**, it'
   - `Qual` — A quality/level display style
 - **Min Value / Max Value** — Output range (0–127 standard; 0–16383 for NRPN and Pitch Bend). The **↔ swap button** inverts the range instantly.
 - **Default Value** — The encoder's starting position when the preset loads
+- **Resolution** — Encoder responsiveness. Enter 1–4 space-separated values (each 1–32673), one per rotational speed level (slow → very fast). Standard: `96`. Larger = faster/coarser; smaller = finer. Click **Standard** to set it to the standard value. Leave blank to use the hardware default.
 
 ### Button Parameters
 
@@ -256,10 +291,14 @@ The Parameter Panel lives on the right side of the screen. In **Edit Mode**, it'
   - `Toggle On` — Always sends the On value; LED stays lit
   - `Toggle Off` — Always sends the Off value; LED stays dark
   - `Momentary (Up/Down)` — Sends On value on press, Off value on release
-  - `Increment` — Each press steps through a configurable number of steps, cycling through the range
-- **Increment Steps** (1–127) — How many steps Increment mode cycles through before wrapping
+  - `Increment` — Each press advances the value by a configurable step, cycling through the range. Available for CC, NRPN, Aftertouch, and Program Change.
+- **Increment Mode** — How to interpret the Increment Steps value:
+  - `Step Value` — The exact MIDI amount added per press
+  - `Number of Steps` — How many total steps divide the 0–127 range; bcMAPPER calculates the step size automatically
+- **Increment Steps** (1–127) — Step size or step count, depending on Increment Mode
 - **Note / CC Number** (0–127) — The target note or controller number
 - **NRPN MSB / LSB** — For NRPN mode
+- **Bank Select MSB / LSB** — For Program Change mode; enables CC 0 / CC 32 to be sent before the Program Change (use for multi-bank synths and devices)
 - **Aftertouch Scope** — `Channel` (monophonic) or `Note` (polyphonic)
 - **MMC Command** — Stop, Play, Fast Forward (Deferred), Rewind, Record, Pause, or Locate
 - **Frame Rate** — Governs SMPTE locate behavior for MMC: Off (no locate), 24, 25, 29.97 Drop Frame, or 30 fps
@@ -342,6 +381,15 @@ The **↺ Reset** button restores all selected controls to their factory default
 
 Below the visual controller, a collapsible **Preset Globals** panel lets you apply sweeping changes across an entire preset (or a filtered subset) without selecting individual controls.
 
+### Preset Behavior
+
+At the top of the expanded panel, two per-preset hardware settings control how the BCR2000/BCF2000 behaves when this preset is active:
+
+- **Snapshot** — When checked, the BCR2000/BCF2000 automatically transmits all control values the moment this preset is selected via its hardware buttons. You can also trigger a snapshot manually at any time by pressing **EDIT + ◄** on the device. In **Virtual Mode**, the hardware send doesn't apply — use the **Send Snapshot** button that appears below this checkbox to push all current virtual control values to your MIDI output manually.
+- **Lock** — When checked, the preset cannot be edited from the hardware itself. Controls still send MIDI normally; only the hardware's built-in edit functions are disabled. Useful for protecting performance presets from accidental changes during a set.
+
+### Apply to Controls
+
 - **Apply To** — Filter which controls are affected: **All Controls**, **Encoders Only**, **Buttons Only**, or **Faders Only** (BCF2000)
 - **MIDI Channel** — Set the same channel across the entire target group
 - **Data Type** — Apply a data type to all encoders/faders and/or all buttons in the group
@@ -361,8 +409,10 @@ In **Edit Mode**, the monitor is hidden by default to keep the controller as lar
 
 ### Filtering
 
-- **Direction** — Show messages going **In**, **Out**, or **Both**
+- **Direction** — Show messages going **In**, **Out**, or **Both**. When Virtual Mode is enabled, the direction filter automatically switches to **Both** so you can see the full picture of incoming feedback and outgoing control messages together.
 - **Message Types** — Toggle visibility per type: Note On, Note Off, CC, Program Change, SysEx, Other (includes Pitch Bend, Aftertouch, etc.)
+
+MIDI clock and system real-time messages (clock pulses, active sensing, etc.) are filtered out automatically — they don't appear in the monitor regardless of filter settings.
 
 ### Reading Entries
 

@@ -4,10 +4,11 @@
 
 A **preset** is a complete snapshot of your controller's configuration — every parameter for every control, all in one file. It contains:
 
-- All encoder settings — data type, CC number, NRPN address, mode, LED ring style, min/max values, default value — for all 32 encoders on the BCR2000 or 8 on the BCF2000
-- All button settings — 32 buttons on both controllers, plus 8 push encoder buttons on the BCR2000
+- All encoder settings — data type, CC number, NRPN address, mode, LED ring style, min/max values, default value, and resolution — for all 32 encoders on the BCR2000 or 8 on the BCF2000
+- All button settings — 32 buttons on both controllers, plus 8 push encoder buttons on the BCR2000; includes controller mode, increment settings, bank select values, and MMC configuration
 - All fader settings — 8 faders for BCF2000 only
 - Foot switch configurations — 4 inputs on both controllers
+- Hardware behavior flags — **Snapshot** (hardware auto-transmits all values when this preset is selected; manually triggered in Virtual Mode via the Send Snapshot button) and **Lock** (prevent hardware editing)
 - Scribble strip labels and colors — your organizational layer, stored per-preset and visible on the controller layout
 
 A **bank** is a collection of up to 32 preset slots — exactly matching the hardware's internal memory structure. Think of a bank as a "page" of 32 presets. You can have as many banks as you like.
@@ -86,9 +87,16 @@ See [MIDI Communication](./midi-communication.md#receiving-presets-from-hardware
 
 bcMAPPER saves automatically when:
 - A new preset or bank is created (saved immediately to the configured directory)
-- You switch between bank slots (the current slot saves before the next one loads)
 
-This means you rarely need to think about saving — but it's still good practice to hit `Cmd/Ctrl + S` after significant changes.
+### Unsaved Changes Prompt
+
+When you navigate away from a preset that has unsaved changes — by clicking a different bank slot, loading a different standalone preset, or switching to a different bank — bcMAPPER will ask what to do with those changes before proceeding:
+
+- **Save & Continue** — Saves the current preset, then navigates to where you were going
+- **Discard** — Abandons the unsaved changes and navigates immediately
+- **Cancel** — Returns you to the current preset, unchanged, so you can decide what to do
+
+The dirty indicator (a small colored dot or asterisk in the UI) signals when there are unsaved changes in the current slot.
 
 ### Manual Save
 
@@ -96,14 +104,26 @@ This means you rarely need to think about saving — but it's still good practic
 
 The **dirty indicator** — a small asterisk `*` in the footer — appears whenever there are unsaved changes. It disappears when you save.
 
+### Back Up Everything at Once
+
+**Preferences → File Paths → Back Up All Presets & Banks** — Creates a single timestamped zip containing every bank and standalone preset in bcMAPPER. A save dialog opens pre-filled with a suggested filename and location (`Backups/` subfolder of your configured save directory) — confirm to save there or navigate anywhere else.
+
+Use this when:
+- You want a full snapshot before making sweeping changes
+- You're migrating to a new machine and want one file to carry everything
+- You want a periodic archive of your entire library
+
+Each run produces a new file — nothing is overwritten. A toast confirms the number of banks and presets included and shows the file location.
+
+See [Backup](./user-interface.md#backup) in the UI reference for details on the zip structure and how to restore from it.
+
 ### Save Bank to File
 
 **File → Save Bank to File** — Exports the entire current bank as a `.json` file. A system save dialog lets you choose the filename and destination.
 
 Use this when:
-- You want a backup of a bank in progress
-- You want to archive a completed bank
 - You want to share the whole bank with someone else
+- You want a copy of a specific bank in a known location outside the Backups folder
 
 ### Export Options
 
@@ -220,9 +240,11 @@ bcMAPPER ships with the original Behringer factory content for both controllers,
 
 **Organize by workflow, not by device.** One bank per project type (mixing, synthesis, live performance) tends to be more maintainable than one bank per session or one bank per date.
 
-**Back up your banks.** Export important banks as `.json` (to preserve labels and colors) and `.syx` (for hardware compatibility and use in other tools). Store both somewhere safe outside of bcMAPPER's save directory.
+**Back up regularly.** Use **Preferences → File Paths → Back Up All Presets & Banks** to create a full snapshot zip in one click. For individual banks you want to share or archive separately, also export them as `.json` (preserves labels and colors) and `.syx` (hardware-compatible). Store copies somewhere safe outside of bcMAPPER's save directory.
 
 **Use Preset Globals first, then specialize.** When starting a new preset from scratch, use Preset Globals to set the MIDI channel across all controls at once, then change the specific controls that need a different channel. Working top-down is faster than going control-by-control.
+
+**Use encoder groups for denser BCR2000 presets.** The BCR2000's 8 push encoders can carry up to 4 separate assignments — one per group (G1–G4). In bcMAPPER, encoder slots E1–E8 are Group 1, E9–E16 are Group 2, E17–E24 are Group 3, and E25–E32 are Group 4. Pressing G1–G4 on the hardware activates the corresponding group's assignments on the physical knobs. Use this to pack 32 different encoder assignments onto 8 physical knobs. bcMAPPER auto-calculates the `.egroups` count from the highest populated group, so G-buttons beyond what you've actually used are automatically suppressed.
 
 **Link a Global Setup Profile to every bank you send to hardware.** Device-wide settings like MIDI mode, foot switch polarity, and SysEx device ID live outside the presets — they belong to the hardware's global setup. Create a profile in **Hardware → Global Setup Profiles...** and link it to your bank via the dropdown in the sidebar. Then whenever you send that bank, the global setup goes first automatically. See [Global Setup Profiles](./midi-communication.md#global-setup-profiles).
 

@@ -9,11 +9,13 @@ bcMAPPER sits between you and your hardware — or between you and your DAW in V
 ### Selecting MIDI Devices
 
 1. Click the **device selector** in the header toolbar (top right)
-2. From the **Input** dropdown, choose your BCR2000 or BCF2000
-3. From the **Output** dropdown, choose the same device
+2. From the **Input** dropdown, choose your BCR2000 or BCF2000 (or an IAC bus for Virtual Mode)
+3. From the **Output** dropdown, choose the same device (or the destination port)
 4. The connection status indicator turns green when both are active and communicating
 
 Both input and output must be selected for full bidirectional operation. Input lets you receive from hardware; output lets you send to it. You need both for the complete workflow.
+
+Both dropdowns include a **None** option. Selecting None for a direction disconnects just that direction without affecting the other. This is particularly useful in Virtual Mode — for example, setting Output to an IAC bus and leaving Input as None avoids potential feedback loops if your DAW echoes messages back.
 
 ### What the Status Indicator Means
 
@@ -93,7 +95,7 @@ The Welcome screen offers a more guided import experience — particularly usefu
    - **Single Preset** — Just the currently active slot
 3. **Select your MIDI input** — Pick the port connected to your hardware
 4. **Click Start Listening** — bcMAPPER enters listening mode and waits for incoming SysEx (no timeout)
-5. **Trigger the dump from your hardware** — Hold **Edit** and press a preset button on the BCR2000, or use the hardware's dump function as described in the device manual
+5. **Trigger the dump from your hardware** — Hold **Edit** and press the RIGHT (>) preset button on the BCR2000, or use the hardware's dump function via Global Setup (EDIT + STORE), selecting the appropriate mode (SnGL or ALL) on encoder 6, and pushing the encoder to start the transfer.
 6. **Watch presets arrive** — A progress indicator shows each preset being received and parsed
 7. **Click Done** — All received presets are loaded into the editor
 
@@ -124,9 +126,9 @@ In Edit Mode, the monitor is hidden by default to maximize controller space. If 
 ### Filtering the Feed
 
 **Direction filter** — choose what direction of traffic to show:
-- **In** — Messages arriving from your hardware
+- **In** — Messages arriving from your hardware or IAC input
 - **Out** — Messages going out to hardware or to the selected output in Virtual Mode
-- **Both** — Everything
+- **Both** — Everything. This is set automatically when Virtual Mode is enabled.
 
 **Type filter** — toggle individual message types on or off:
 - Note On
@@ -135,6 +137,8 @@ In Edit Mode, the monitor is hidden by default to maximize controller space. If 
 - Program Change
 - SysEx
 - Other (covers Pitch Bend, Aftertouch, and any other message types)
+
+MIDI clock and other system real-time messages (active sensing, timing clock, etc.) are filtered out automatically regardless of the type filter setting — they generate too much noise to be useful in the monitor.
 
 Use the type filter when you're working with a lot of traffic and only care about a specific kind — for example, filtering to CC only while testing encoder behavior, or showing only SysEx during a hardware dump.
 
@@ -155,7 +159,7 @@ The monitor auto-scrolls to show the most recent messages. Click **Clear** to re
 
 ## Virtual Mode
 
-Virtual Mode turns the on-screen controller into a fully functional MIDI output device. The controls become interactive — you can twist encoders, click buttons, and drag faders to send live MIDI messages — with no hardware required.
+Virtual Mode turns the on-screen controller into a fully functional MIDI device. The controls become interactive — you can twist encoders, click buttons, and drag faders to send live MIDI messages — and they also respond to incoming MIDI from your DAW or softsynth, keeping the on-screen controls in sync with what the receiving software is actually doing.
 
 ### Enabling Virtual Mode
 
@@ -170,7 +174,7 @@ Everything in Virtual Mode sends output exactly as the hardware would — on the
 | Control Type | Interaction |
 |---|---|
 | **Encoder** | Click and drag vertically — drag up to increase the value, drag down to decrease it. Or use the mouse wheel. |
-| **Button** | Click to activate. Behavior follows the configured Controller Mode and Start State: Toggle alternates states, Momentary sends On on mousedown and Off on mouseup. |
+| **Button** | Click to activate. Behavior follows the configured Controller Mode and Start State: Toggle alternates states, Momentary sends On on mousedown and Off on mouseup, Increment steps through the range with each click. |
 | **Fader** (BCF2000) | Click and drag vertically. |
 | **Foot Switch** | Click, same as a button. |
 
@@ -179,6 +183,52 @@ Every interaction sends a real MIDI message to the selected output device. The M
 ### The LED Display in Virtual Mode
 
 The LED display area on the visual controller (lower area of the BCR/BCF layout) shows the **current value being sent** as you interact with controls. After 2 seconds of inactivity on that control, the display clears and returns to showing the current preset number.
+
+### Live MIDI Feedback
+
+When an input port is selected alongside an output port, Virtual Mode provides **live two-way feedback**. Incoming MIDI messages from your DAW or softsynth are matched against the current preset's control mappings, and any matched control updates its on-screen position in real time — without you touching bcMAPPER.
+
+This is useful for:
+- Seeing how automation in your DAW moves controls in the preset
+- Confirming that a softsynth's state is actually changing when you send to it
+- Using bcMAPPER as a visual overlay that mirrors the state of your software instruments
+
+The visual update rate is throttled to approximately 30fps per control — fast enough to look smooth, but not so fast that it becomes a performance burden.
+
+**Recommended setup for live feedback:**
+- Set Output to the IAC bus your DAW is listening on
+- Set Input to the same IAC bus (or a second one if your DAW echoes back on the same port)
+- In your DAW, route MIDI output from the instrument track back to the IAC bus input that bcMAPPER is listening on
+
+> **Important:** If both Input and Output point to the same IAC bus, see the [Avoiding Feedback Loops](#avoiding-feedback-loops) section below before enabling Virtual Mode.
+
+### Avoiding Feedback Loops
+
+A MIDI feedback loop happens when:
+1. bcMAPPER sends a message out on a port
+2. The same port (or an IAC-routed version of it) delivers that message back to bcMAPPER's input
+3. bcMAPPER processes the incoming message, possibly sending another — and the cycle repeats
+
+Left unchecked, this can flood bcMAPPER with thousands of messages per second, locking up the UI.
+
+**bcMAPPER has two defenses:**
+
+**Echo suppression** — When bcMAPPER sends a MIDI message, it records what it sent in a short-lived buffer. If the same message arrives on the input within 50ms, it's recognized as its own echo and discarded. This handles the most common case: IAC buses that loop your own output back to you.
+
+**Feedback loop detection** — If a large volume of non-echo matched messages keeps arriving, bcMAPPER concludes that there's a genuine loop from an external source. It will:
+- Display a modal explaining what happened
+- Automatically disable Virtual Mode
+- Tell you which port combination is likely causing it and how to fix it
+
+**How to prevent loops in the first place:**
+
+| Situation | Recommendation |
+|-----------|---------------|
+| Sending to a DAW via IAC, not receiving feedback | Set Output to the IAC bus, set Input to **None** |
+| Sending to a DAW and receiving DAW feedback | Use two IAC buses — one for bcMAPPER → DAW, one for DAW → bcMAPPER |
+| Using with hardware only, no DAW | Use the physical USB MIDI ports directly; no IAC bus needed |
+
+> **Warning:** Enabling Virtual Mode with the same IAC port selected for both Input and Output will generate a same-port warning. bcMAPPER will tell you this configuration is likely to produce a feedback loop and suggest setting one direction to **None**.
 
 ### Setting Up a Virtual MIDI Port
 
@@ -193,6 +243,8 @@ To route bcMAPPER's output into your DAW during Virtual Mode, you need a virtual
 6. Close Audio MIDI Setup
 7. The IAC port now appears in bcMAPPER's output device selector immediately
 
+For two-way feedback with a DAW, create **two IAC ports** (e.g., "bcMAPPER → DAW" and "DAW → bcMAPPER") and configure each end accordingly. This keeps output and input on separate buses and eliminates self-echo.
+
 **On Windows:**
 1. Download **loopMIDI** from tobias-erichsen.de (it's free and widely used)
 2. Install and launch it
@@ -202,6 +254,81 @@ To route bcMAPPER's output into your DAW during Virtual Mode, you need a virtual
 If no virtual ports are detected when you enable Virtual Mode, bcMAPPER will offer to guide you through the setup for your platform.
 
 > **Tip:** In your DAW, create a MIDI track with the virtual port as its input. Monitor the track and you'll hear bcMAPPER's virtual controller output in real time. This is a great way to test a preset configuration without the hardware in hand.
+
+### MIDI Reconnect
+
+IAC buses and virtual MIDI ports can silently drop after the system sleeps, after an audio interface is reconnected, or when another app restarts. If the MIDI Monitor shows no activity but you know MIDI should be flowing, click the **Reconnect** button (plug icon, next to the Refresh button in the device selector area). This re-establishes the connection to the current port without changing which port is selected.
+
+---
+
+## Global Setup Profiles
+
+The BCR2000 and BCF2000 have a set of **device-wide settings** — stored in the hardware's `$global` section — that govern how the whole device behaves, independent of any individual preset. bcMAPPER lets you save these as named profiles, send them to hardware with one click, and link them to banks so the global setup travels with your presets automatically.
+
+### The Seven Global Settings
+
+| Setting | What it controls | Valid values |
+|---------|-----------------|--------------|
+| **MIDI Mode** | How MIDI data is routed between USB and DIN ports | U-1, U-2, U-3, U-4 (USB-only routing variants), S-1, S-2, S-3, S-4 (USB + DIN) |
+| **Startup Preset** | Which preset slot loads when the device powers on | `last` (resume the last-used preset), or a fixed slot number 1–32 |
+| **Foot Switch** | Wiring polarity of the foot switch input | `norm` (normally closed), `inv` (normally open), `auto` (autodetect) |
+| **Receive Channel** | MIDI channel on which the device listens for Program Change messages to switch presets | `off` (disabled), or 1–16 |
+| **SysEx Device ID** | The device ID used in all SysEx communication | 1–16. Must match what bcMAPPER uses when sending (set in the Send to Hardware dialog) |
+| **TX Interval** | Minimum milliseconds between repeated MIDI outputs for the same control | 2, 5, 10, 20, 50, or 100 ms |
+| **Dead Time** | How long (in ms) encoders and faders ignore incoming MIDI after being physically moved | 0–200 ms (BCR2000 default: 0 ms; BCF2000 default: 100 ms) |
+
+> **U vs S modes:** U modes route MIDI data via USB only. S modes send MIDI data simultaneously over both USB and the DIN (5-pin) MIDI out. Within each group, the number (1–4) determines which USB sub-port or DIN output the data goes to. Consult the BCR/BCF MIDI implementation guide for exact routing tables.
+
+### Creating a Profile
+
+1. Open **Hardware → Global Setup Profiles...** in the header menu
+2. Click **New Profile**
+3. Enter a name (e.g., "Studio Rig – USB Only") and select the device type (BCR2000 or BCF2000)
+4. Adjust the seven settings as needed — the form shows factory defaults for the selected device
+5. Click **Create Profile**
+
+The profile is saved immediately and persists across sessions.
+
+### Editing and Deleting Profiles
+
+All saved profiles appear in the profile list in the Global Setup dialog. Each profile card shows the device type, MIDI mode, and SysEx device ID at a glance.
+
+- **Edit** (pencil icon) — Opens the profile back in the editor. All changes take effect when you click **Save Changes**.
+- **Delete** (trash icon) — Permanently removes the profile. Any banks that were linked to it are automatically unlinked; no bank data is lost.
+
+### Sending a Profile to Hardware
+
+1. Open **Hardware → Global Setup Profiles...**
+2. Find the profile you want to send
+3. Click the **upload icon** on the profile card
+
+bcMAPPER generates the BCL `$global` section and sends it to the currently connected output device. The device reboots its global state to match the settings in the profile.
+
+You can also click the **copy icon** to copy the raw BCL to your clipboard, for pasting into BC Manager or MIDI-OX.
+
+> **No output device connected?** The upload button is hidden when no MIDI output is available. Connect a device first via the device selector in the header.
+
+### Linking a Profile to a Bank
+
+The most powerful use of global setup profiles is linking one to a bank so everything stays in sync:
+
+1. Load the bank you want to link (it must be the **active** bank)
+2. In the sidebar, find the bank's card — below the Active badge, you'll see a small **Global Setup** dropdown
+3. Select a profile from the dropdown (only profiles matching the bank's device type appear)
+
+From this point on, whenever you use **Send to Hardware → All 32 Presets**, bcMAPPER automatically sends the linked global setup first, then the presets. No extra steps.
+
+The **BCL Code** tab in Send to Hardware also shows the global setup BCL prepended to the bank BCL, so you can inspect or copy the complete sequence.
+
+To unlink a profile, select **No global setup linked** from the dropdown.
+
+### When to Use Global Setup Profiles
+
+**Always link one when sending a full bank.** Even if you're happy with the hardware's current global state, having a profile linked makes your bank self-contained — when you come back to it six months later or share it with someone else, the global setup travels with it.
+
+**Use separate profiles for different rigs.** If you use the same controller with multiple setups — one connected via USB, one via DIN — create one profile per rig with the appropriate MIDI mode and device ID. Switching rigs is then just loading the right bank.
+
+**Match the SysEx device ID.** The device ID in your global profile must match the device ID you use in the Send to Hardware dialog. Mismatched IDs cause the hardware to ignore incoming SysEx. The factory default on both devices is ID 1 (0-based value 0 in SysEx headers).
 
 ---
 

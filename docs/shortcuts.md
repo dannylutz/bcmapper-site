@@ -10,6 +10,7 @@ All keyboard shortcuts in bcMAPPER, organized by category. On Mac, use `Cmd` whe
 |----------|--------|
 | `Cmd/Ctrl + N` | Create a new preset — lands in the next empty bank slot if a bank is loaded, or creates a standalone preset otherwise |
 | `Cmd/Ctrl + S` | Save the current preset |
+| `Cmd/Ctrl + ,` | Open Preferences |
 
 ---
 
@@ -58,8 +59,9 @@ All keyboard shortcuts in bcMAPPER, organized by category. On Mac, use `Cmd` whe
 
 | Shortcut | Action |
 |----------|--------|
-| `Cmd/Ctrl + T` | Open the Send to Hardware dialog |
-| `Cmd/Ctrl + R` | Open the Receive from Hardware dialog |
+| `Cmd/Ctrl + T` or `Cmd/Ctrl + Shift + S` | Open the Send to Hardware dialog |
+| `Cmd/Ctrl + R` or `Cmd/Ctrl + Shift + R` | Open the Receive from Hardware dialog |
+| `Cmd/Ctrl + Shift + V` | Toggle Virtual Mode on/off |
 
 ---
 
@@ -72,7 +74,7 @@ Virtual Mode replaces hardware interaction with on-screen control. These aren't 
 | Click + drag up | Encoder | Increases the value |
 | Click + drag down | Encoder | Decreases the value |
 | Mouse wheel | Encoder | Scrolls the value up or down |
-| Click | Button | Toggles the button state (follows configured Controller Mode and Start State) |
+| Click | Button | Toggles the button state (follows configured Controller Mode) |
 | Click | Foot Switch | Activates the foot switch (same behavior as a button) |
 | Click + drag up | Fader | Increases the fader value |
 | Click + drag down | Fader | Decreases the fader value |

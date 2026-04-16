@@ -10,6 +10,20 @@ Changes you make in the Parameter Panel take effect in the application immediate
 
 Rotary knobs with LED rings. The BCR2000 has 32 total — 8 push encoders in the top row (each with a built-in push button) plus 24 standard encoders in three rows below. The BCF2000 has 8 push encoders.
 
+### BCR2000 Encoder Groups
+
+The BCR2000's 8 physical push encoders support up to **4 encoder groups**, selectable via the G1–G4 buttons on the hardware. Each group is a completely independent set of 8 assignments on the same 8 physical knobs — pressing G1 activates Group 1's mappings, pressing G2 activates Group 2's, and so on.
+
+In bcMAPPER, this is expressed as encoder slots:
+- **E1–E8** — Group 1 (active when G1 is pressed)
+- **E9–E16** — Group 2 (active when G2 is pressed)
+- **E17–E24** — Group 3 (active when G3 is pressed)
+- **E25–E32** — Group 4 (active when G4 is pressed)
+
+Use the group selector in the bcMAPPER header to switch which group you're currently editing. The BCL and hardware configuration are generated automatically — the correct `.egroup` assignments and `.egroups` count are written without any manual setup. A preset using only E1–E16 will have `.egroups 2` in its BCL, and G3/G4 will be inactive on the hardware.
+
+The 24 standard encoders (E33–E56) are always active, regardless of which group is selected.
+
 ### Encoder Parameters
 
 **Channel** (1–16)
@@ -57,6 +71,24 @@ The output range. Standard range is 0–127; expands to 0–16383 for NRPN and P
 **Default Value**
 The value the encoder starts at when the preset loads. The hardware uses this to know where to "wake up" when you switch presets.
 
+**Resolution**
+Controls how responsive the encoder feels when turned. Accepts one to four space-separated values (each in the range 1–32673), where each value applies to a different rotational speed level — slowest, slow, fast, and fastest. The standard value used by BC Manager is **96**.
+
+- **Larger values** feel faster and coarser — the value range is covered with less physical turning
+- **Smaller values** feel slower and finer — more turning is required to traverse the same range
+
+With a single value, that sensitivity applies at all turning speeds. With multiple values, the encoder automatically shifts to a faster response as you spin it harder — useful when you want precise fine-tuning at slow speeds but quick jumps when sweeping.
+
+Examples:
+- `96` — Standard sensitivity (hardware default-equivalent in BC Manager)
+- `48` — Finer feel; useful for precise parameter editing
+- `192` — Coarser; full range reachable with a quick half-turn
+- `96 192 384 768` — Velocity-sensitive: slow = 96, medium = 192, fast = 384, very fast = 768
+
+Leave the field empty to use the hardware's built-in default. Click **Standard** in the Parameter Panel to set it to 96 in one click.
+
+> **Note:** This has nothing to do with MIDI bit resolution (7-bit vs 14-bit) or the encoder's min/max output range. Those are configured separately.
+
 ---
 
 ## Push Encoder Buttons
@@ -97,16 +129,30 @@ How the button behaves:
 - **Toggle On** — Always sends the On value. LED stays lit. Useful for buttons that should only ever trigger one side of a parameter.
 - **Toggle Off** — Always sends the Off value. LED stays dark.
 - **Momentary (Up/Down)** — Sends the On value when the button is pressed down, and the Off value when released. Behaves like a piano key.
-- **Increment** — Each press advances through a configurable number of steps, cycling through the min-to-max range before wrapping. Useful for cycling through states or programs.
+- **Increment** — Each press advances through the value range one step at a time, wrapping when it reaches the maximum. Useful for cycling through programs, presets, or discrete states. Supported for CC, NRPN, Aftertouch, and Program Change types.
+
+**Increment Mode** — Increment mode only
+Controls how the **Increment Steps** value is interpreted:
+- **Step Value** — The number entered is the exact MIDI value added on each press. A step value of 10 advances the output by 10 each time.
+- **Number of Steps** — The number entered is how many total steps divide the full range (0–127). bcMAPPER calculates the step size automatically: `step size = floor(128 ÷ N)`. For example, entering 8 produces steps of 16, giving you 8 evenly spaced positions across the full range.
 
 **Increment Steps** (1–127) — Increment mode only
-How many steps to cycle through. For example, if you want a button to cycle through 8 program changes, set Increment Steps to 8.
+The step value or step count, depending on Increment Mode. The BCL always receives the pre-calculated step value — Increment Mode only affects how you express it in the UI.
 
 **Note / CC Number** (0–127)
 The target note number or CC number.
 
 **NRPN MSB / LSB** — NRPN mode only
 The parameter address (same MSB/LSB pair concept as encoders).
+
+**Bank Select MSB / LSB** — Program Change mode only
+When enabled via the checkbox next to each field, bcMAPPER sends CC 0 (Bank Select MSB) and/or CC 32 (Bank Select LSB) immediately before the Program Change message. Use these when your target device organizes sounds into banks — most hardware synths and some DAWs require a bank select before recognizing a program change as referring to the correct bank.
+
+- Leave both unchecked when the device only has one bank (0–127 is enough)
+- Enable MSB only for devices with up to 128 banks
+- Enable both MSB and LSB for devices with up to 16,384 banks (GM Level 2, Roland, Yamaha, Korg, etc.)
+
+Bank Select also works in Increment mode — the same bank is sent before each incremented program change.
 
 **Aftertouch Scope** — Aftertouch mode only
 - **Channel** — A single pressure value applies to all notes on the channel (monophonic/channel aftertouch)
@@ -327,6 +373,16 @@ For changes that should sweep across an entire preset:
 
 This is the power move at the start of a new preset — set the channel for all controls globally in two seconds, then change the handful of controls that need to be on a different channel.
 
+At the top of the Preset Globals panel, two per-preset hardware settings are also available:
+
+**Snapshot**
+When enabled, the BCR2000/BCF2000 automatically sends all current control values as a stream of MIDI messages the moment this preset is selected via its hardware buttons. You can also trigger a snapshot manually at any time by pressing **EDIT + ◄** on the device. This is invaluable for DAW integration — your DAW parameters instantly sync to the hardware's stored positions on every preset recall.
+
+In **Virtual Mode**, the hardware auto-send doesn't apply. Instead, a **Send Snapshot** button appears below the Snapshot checkbox in Preset Globals. Click it to push all current virtual control values to your MIDI output at any time.
+
+**Lock**
+When enabled, the preset's parameters cannot be edited directly on the hardware itself. Controls still transmit MIDI normally, but the hardware's built-in editing functions (holding a button + turning an encoder, etc.) have no effect. Use Lock for performance presets you want to protect from accidental edits during a session.
+
 ---
 
 ## Swapping Values
@@ -349,6 +405,89 @@ Rules:
 - Copy/paste only works between **controls of the same type** — encoder to encoder, button to button, fader to fader. Attempting to paste across types does nothing.
 - When multiple controls are selected, paste applies the clipboard configuration to all of them simultaneously.
 - Scribble strip labels, colors, and font settings **are** included in the copy — everything gets transferred.
+
+---
+
+## Custom Output
+
+Every control — encoder, button, or fader — can have one or more **Custom Output** lines attached to it. These are additional MIDI or SysEx messages sent alongside (or instead of) the normal BCL-generated output, triggered by control changes in Virtual Mode.
+
+Please note that this is unidirectional - you can send it to the hardware, but it won;t transfer back to bcMAPPER.
+
+Custom Output is the right tool when:
+- A softsynth or hardware device uses proprietary SysEx for parameter control
+- You need to send multiple messages (e.g., an address write + a value) when a single control moves
+- Your device requires Roland DT1, Yamaha Parameter Change, or RPN sequences
+- You need direction-conditional output — different messages when a value increases vs. decreases
+
+### Adding a Custom Output Line
+
+1. Select a control on the visual controller
+2. In the Parameter Panel, expand the **Custom Output** section
+3. Click **Add Line** to create a new output line
+4. Choose a **Condition**: when this line fires
+5. Enter the raw BCL `.tx` expression in the text field
+6. Enable the line with the checkbox at the left
+
+### Conditions
+
+| Condition | When it fires |
+|-----------|--------------|
+| **Always** | Every time the control value changes, in either direction |
+| **If Positive Change** | Only when the value increases (encoder turned clockwise, fader moved up, button value goes higher) |
+| **If Negative Change** | Only when the value decreases |
+
+Direction-conditional lines are the foundation of encoder-specific SysEx — for example, sending one address to a synth when turning clockwise and a different address when turning counterclockwise.
+
+### The `.tx` Expression Syntax
+
+Each line is a BCL `.tx` directive — a space-separated list of byte values to transmit. Bytes can be:
+
+| Token | Meaning |
+|-------|---------|
+| `$F0` | Literal hex byte (dollar sign prefix, two digits) |
+| `val` | Replaced at runtime with the current control value (0–127) |
+| `val>>7` | High byte of a 14-bit value |
+| `val&127` | Low byte of a 14-bit value |
+
+**Example — generic SysEx with the current CC value embedded:**
+```
+$F0 $00 $20 $29 $02 $0D $77 val $F7
+```
+This sends an 8-byte SysEx message where `val` is replaced with the encoder's current position.
+
+**Example — Roland DT1 parameter write:**
+```
+$F0 $41 $10 $42 $12 $01 $00 $00 val checksum $F7
+```
+
+### The Message Builder
+
+Rather than writing `.tx` expressions by hand, click the **wand icon** on any line to open the **Advanced Message Builder**. This provides structured forms for the most common message types:
+
+- **Generic SysEx** — Manufacturer ID + arbitrary payload, with `val` insertion anywhere
+- **Roland SysEx (DT1 / RQ1)** — Device ID, Model ID, address, data bytes, and automatic Roland checksum
+- **Yamaha SysEx** — Device ID, Model ID, Parameter Change / Parameter Request / Bulk Dump command, address, data, and optional Yamaha bulk checksum
+- **RPN Sequence** — Structured form for sending a Registered Parameter Number (CC 101 + CC 100 + CC 6 + CC 38), with optional RPN null termination
+- **Encoder Direction Pair** — Creates two lines at once: one for clockwise (positive change) and one for counterclockwise (negative change), each with their own message
+- **Multi-Message Sequence** — Chain several messages together into a single logical output, fired as a unit
+
+The builder generates the `.tx` expression when you click **Apply to Line**, and you can always edit the raw text afterward.
+
+### Byte Budget
+
+Each preset has a fixed byte budget for BCL content. Custom output lines consume bytes from this budget. A budget indicator appears in the Custom Output section showing how much of the budget the current control's lines are using. Lines that would push the total over budget are flagged with a warning.
+
+### Line Management
+
+- **Enable / Disable** — The checkbox at the left of each line enables or disables it without deleting it. Useful for temporarily suppressing a line while testing.
+- **Reorder** — The up/down chevrons move a line within the list. Lines fire top-to-bottom.
+- **Duplicate** — The copy icon creates an exact copy of the line below it.
+- **Delete** — The trash icon removes the line permanently (within the current preset; undo is available).
+
+### Viewing the BCL Output
+
+The BCL Preview section in the Parameter Panel (below Custom Output) shows the complete generated BCL for the selected control, including all enabled custom output lines. This is the exact sequence that gets transmitted to hardware and that Virtual Mode uses at runtime.
 
 ---
 
