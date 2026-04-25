@@ -51,6 +51,18 @@ The hardware receives the data, parses it, and updates that preset slot. On the 
 
 > **Important:** Sending to a slot overwrites whatever was previously stored there on the hardware. If the hardware has something valuable in that slot that you haven't backed up, receive it into bcMAPPER first.
 
+### Sending Selected Controls
+
+You can send one or more individual controls to hardware without resending the entire preset. This is useful when you've tweaked a few controls and want to test them without triggering a full 32-slot overwrite.
+
+1. Select the control(s) you want to send — click one, or Shift-click / drag to select multiple
+2. Right-click any selected control
+3. Choose **Send N control(s) to hardware** from the context menu
+
+bcMAPPER generates partial BCL covering only the selected controls and transmits it immediately — no dialog, no slot selection. The controls land in their natural positions within the current preset slot on the hardware.
+
+> **Note:** A MIDI output device must be connected. The context menu item is disabled (greyed out) if no output is selected.
+
 ### What's Actually Being Sent
 
 bcMAPPER translates your preset configuration into **BCL (B-Control Language)** — Behringer's own text-based configuration format — and wraps it in a SysEx message for transmission.
@@ -154,6 +166,18 @@ OUT          12:34:58.901   Program Chg   Ch:2        Program 5
 ```
 
 The monitor auto-scrolls to show the most recent messages. Click **Clear** to reset the log. There's no message limit — if you run it for a while with a lot of activity, filter by type to reduce the volume.
+
+### RAW Mode
+
+Click the **RAW** button in the monitor header to switch to RAW mode. Instead of parsed message rows, you get a hex dump of every incoming MIDI byte, with a human-readable label on each line.
+
+RAW mode is particularly useful when working with SysEx, NRPN, or RPN — message types that span multiple bytes or multiple messages and aren't fully decoded in the standard view.
+
+**NRPN / RPN assembly** — RAW mode includes a per-channel state machine that watches for CC 99/98 (NRPN parameter MSB/LSB) and CC 101/100 (RPN parameter MSB/LSB) sequences. Once a parameter number is established, subsequent Data Entry messages (CC 6 for MSB, CC 38 for LSB) are labeled with the resolved parameter number rather than just the raw CC number.
+
+**CLK toggle** — MIDI Clock and Active Sensing bytes are hidden by default in RAW mode (they generate too much noise). Click the **CLK** button — which appears next to RAW when RAW mode is active — to show or hide these system real-time messages.
+
+To return to the standard monitor view, click **RAW** again to deactivate it.
 
 ---
 

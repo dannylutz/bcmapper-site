@@ -15,6 +15,7 @@ Instead of squinting at a tiny LED display and tapping through cryptic menus on 
 - **Real-time MIDI Monitor** — Watch every MIDI message flowing in and out, with direction and type filters to cut through the noise.
 - **Virtual Mode** — No hardware nearby? Interact with controls on-screen and route MIDI to your DAW via a virtual MIDI port.
 - **BCL Preview** — See the raw B-Control Language code being generated for any selected control. Useful for debugging and for the curious.
+- **Custom Output** — Attach extra MIDI or SysEx messages to any control. Write `.tx` expressions for raw byte sequences, or build them with the Message Builder — structured forms for Roland SysEx, Yamaha SysEx, RPN sequences, direction-pair encoders, and more.
 - **Copy & Paste** — Capture a control's full configuration and stamp it onto others. Great for building templated layouts quickly.
 - **Factory Presets** — Both the BCR2000 and BCF2000 factory banks are built in and automatically restored, giving you a ready-made reference or starting point.
 - **Undo & Redo** — Step freely through your edit history (up to 100 steps) without fear.

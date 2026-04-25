@@ -412,7 +412,7 @@ Rules:
 
 Every control — encoder, button, or fader — can have one or more **Custom Output** lines attached to it. These are additional MIDI or SysEx messages sent alongside (or instead of) the normal BCL-generated output, triggered by control changes in Virtual Mode.
 
-Please note that this is unidirectional - you can send it to the hardware, but it won;t transfer back to bcMAPPER.
+Please note that this is unidirectional - you can send it to the hardware, but it won't transfer back to bcMAPPER.
 
 Custom Output is the right tool when:
 - A softsynth or hardware device uses proprietary SysEx for parameter control
