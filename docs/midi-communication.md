@@ -198,7 +198,7 @@ Everything in Virtual Mode sends output exactly as the hardware would — on the
 | Control Type | Interaction |
 |---|---|
 | **Encoder** | Click and drag vertically — drag up to increase the value, drag down to decrease it. Or use the mouse wheel. |
-| **Button** | Click to activate. Behavior follows the configured Controller Mode and Start State: Toggle alternates states, Momentary sends On on mousedown and Off on mouseup, Increment steps through the range with each click. |
+| **Button** | Click to activate. Toggle Off starts Off and Toggle On starts On; both alternate states with each click. Increment steps through the configured range with each click. |
 | **Fader** (BCF2000) | Click and drag vertically. |
 | **Foot Switch** | Click, same as a button. |
 

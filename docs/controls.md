@@ -124,12 +124,12 @@ What kind of MIDI message the button sends:
 - **GS/XG** — Roland GS / Yamaha XG synthesis parameters
 
 **Controller Mode**
-How the button behaves:
-- **Toggle** — Alternates between On and Off values with each press. The button LED reflects which state it's currently in.
-- **Toggle On** — Always sends the On value. LED stays lit. Useful for buttons that should only ever trigger one side of a parameter.
-- **Toggle Off** — Always sends the Off value. LED stays dark.
-- **Momentary (Up/Down)** — Sends the On value when the button is pressed down, and the Off value when released. Behaves like a piano key.
-- **Increment** — Each press advances through the value range one step at a time, wrapping when it reaches the maximum. Useful for cycling through programs, presets, or discrete states. Supported for CC, NRPN, Aftertouch, and Program Change types.
+The Controller Mode selector offers three choices:
+- **Toggle Off (`toFF`)** — Latching behavior, starting Off. Each press alternates between the On and Off values; the first press turns it On.
+- **Toggle On (`tOn`)** — Latching behavior, starting On. Each press alternates between the On and Off values; the first press turns it Off.
+- **Increment (`Inc`)** — Each press advances through the value range by the configured step, wrapping through the range. Supported for CC, NRPN, Aftertouch, and Program Change types.
+
+Toggle On and Toggle Off specify the initial state, rather than sending only one fixed value. There is no separate Toggle or Momentary (Up/Down) choice in the current selector. Older presets may still contain legacy Toggle or Up/Down settings.
 
 **Increment Mode** — Increment mode only
 Controls how the **Increment Steps** value is interpreted:
@@ -186,8 +186,8 @@ The SMPTE timecode position: Hours (0–23), Minutes (0–59), Seconds (0–59),
 **On Value / Off Value** (0–127)
 The values sent for the active and inactive states. A **↔ swap button** is available to instantly invert them — useful for reversing the polarity of a toggle without manually re-entering values.
 
-**Start State**
-Whether the button's LED starts **On** or **Off** when the preset loads. This matters especially in Toggle mode, because it determines the button's initial state and therefore what value will be sent on the very first press.
+**Initial State**
+The initial state is part of Controller Mode: Toggle On starts On, and Toggle Off starts Off. There is no separate Start State selector.
 
 ---
 
@@ -264,7 +264,7 @@ Every CC number is technically equivalent from the protocol's perspective. The c
 
 ### Note
 
-Sends a Note On message when activated, and a Note Off when deactivated. In Momentary mode, press = Note On and release = Note Off. In Toggle mode, the first press sends Note On and the second sends Note Off.
+Sends a Note On message when activated, and a Note Off when deactivated. With Toggle Off, the first press sends Note On and the next sends Note Off. Toggle On starts in the On state, so the first press sends Note Off.
 
 ```
 Note On:   9n kk vv   (channel, key number 0–127, velocity 0–127)

@@ -1,7 +1,7 @@
 {
   "version": "0.9.0",
-  "docsVersion": "0.9.0",
-  "docsChangelog": "Documentation updated for 0.9.0 release.",
+  "docsVersion": "0.9.1",
+  "docsChangelog": "Corrected button Controller Mode documentation: Toggle Off, Toggle On, and Increment; clarified initial states and removed unavailable mode choices.",
   "releaseUrl": "https://bcmapper.ca/downloads.html",
   "releaseNotes": "What's new in 0.9.0 (version sync from 0.8.5)",
   "changelog": [

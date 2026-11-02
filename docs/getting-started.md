@@ -90,7 +90,7 @@ Don't have your hardware nearby, or just want to verify a preset's behavior befo
 Toggle Virtual Mode from the *Hardware* menu in the header toolbar. Once active:
 
 - **Encoders** respond to click-and-drag (drag upward to increase the value, downward to decrease) or to the mouse wheel
-- **Buttons** toggle on click, respecting the configured Controller Mode and Start State — a Toggle button behaves like a toggle, a Momentary button sends its On value on mousedown and Off on mouseup
+- **Buttons** follow Controller Mode: Toggle Off starts Off and Toggle On starts On; both alternate states with each click. Increment advances through the configured range with each click.
 - **Faders** (BCF2000) respond to vertical click-and-drag
 - MIDI output is sent to whichever output device is selected in the header
 

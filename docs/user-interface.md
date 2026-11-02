@@ -287,11 +287,10 @@ The Parameter Panel lives on the right side of the screen. In **Edit Mode**, it'
 
 - **Data Type** — CC, Note, Program Change, NRPN, Aftertouch, Pitch Bend, MMC, or GS/XG
 - **Controller Mode** — Behavior when pressed:
-  - `Toggle` — Alternates between On and Off values with each press; LED reflects the current state
-  - `Toggle On` — Always sends the On value; LED stays lit
-  - `Toggle Off` — Always sends the Off value; LED stays dark
-  - `Momentary (Up/Down)` — Sends On value on press, Off value on release
-  - `Increment` — Each press advances the value by a configurable step, cycling through the range. Available for CC, NRPN, Aftertouch, and Program Change.
+  - `Toggle Off` (`toFF`) — Starts Off and alternates between On and Off with each press
+  - `Toggle On` (`tOn`) — Starts On and alternates between On and Off with each press
+  - `Increment` (`Inc`) — Each press advances the value by a configurable step, cycling through the range. Available for CC, NRPN, Aftertouch, and Program Change.
+  - These are the three selectable modes; Toggle and Momentary (Up/Down) are legacy settings, not separate choices.
 - **Increment Mode** — How to interpret the Increment Steps value:
   - `Step Value` — The exact MIDI amount added per press
   - `Number of Steps` — How many total steps divide the 0–127 range; bcMAPPER calculates the step size automatically
@@ -304,7 +303,7 @@ The Parameter Panel lives on the right side of the screen. In **Edit Mode**, it'
 - **Frame Rate** — Governs SMPTE locate behavior for MMC: Off (no locate), 24, 25, 29.97 Drop Frame, or 30 fps
 - **Locate Position** — Hours, Minutes, Seconds, Frames, Subframes (shown when Frame Rate is not Off)
 - **On Value / Off Value** (0–127) — Values for the two button states, with **↔ swap button**
-- **Start State** — Whether the button LED starts On or Off when the preset loads
+- **Initial State** — Determined by Controller Mode: Toggle On starts On; Toggle Off starts Off. There is no separate Start State selector.
 
 ### Fader Parameters (BCF2000 Only)
 
@@ -347,7 +346,7 @@ Available bulk parameters:
 - **MIDI Channel** — Same channel across all selected controls
 - **Data Type** — Separate fields for encoders/faders and for buttons (each has a different set of options)
 - **Mode** — Encoder/fader mode (Absolute, Relative 1/2/3)
-- **Controller Mode** — Button behavior (Toggle, Momentary, Increment, etc.)
+- **Controller Mode** — Button behavior (Toggle Off, Toggle On, or Increment)
 - **On / Off Values** — For buttons, with swap button
 - **Default Value** — For encoders and faders
 
