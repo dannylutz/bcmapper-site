@@ -124,12 +124,12 @@ What kind of MIDI message the button sends:
 - **GS/XG** — Roland GS / Yamaha XG synthesis parameters
 
 **Controller Mode**
-The Controller Mode selector offers three choices:
+The individual button Controller Mode selector offers three choices:
 - **Toggle Off (`toFF`)** — Latching behavior, starting Off. Each press alternates between the On and Off values; the first press turns it On.
 - **Toggle On (`tOn`)** — Latching behavior, starting On. Each press alternates between the On and Off values; the first press turns it Off.
 - **Increment (`Inc`)** — Each press advances through the value range by the configured step, wrapping through the range. Supported for CC, NRPN, Aftertouch, and Program Change types.
 
-Toggle On and Toggle Off specify the initial state, rather than sending only one fixed value. There is no separate Toggle or Momentary (Up/Down) choice in the current selector. Older presets may still contain legacy Toggle or Up/Down settings.
+Toggle On and Toggle Off specify the initial state, rather than sending only one fixed value. There is no separate Toggle or Momentary (Up/Down) choice in the individual button selector. Older presets may still contain legacy Toggle or Up/Down settings.
 
 **Increment Mode** — Increment mode only
 Controls how the **Increment Steps** value is interpreted:

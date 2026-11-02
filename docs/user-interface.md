@@ -346,7 +346,7 @@ Available bulk parameters:
 - **MIDI Channel** — Same channel across all selected controls
 - **Data Type** — Separate fields for encoders/faders and for buttons (each has a different set of options)
 - **Mode** — Encoder/fader mode (Absolute, Relative 1/2/3)
-- **Controller Mode** — Button behavior (Toggle Off, Toggle On, or Increment)
+- **Controller Mode** — Button behavior. The bulk editor still exposes the legacy Toggle and Momentary (Up/Down) entries alongside Toggle On, Toggle Off, and Increment; the individual button selector offers only Toggle On, Toggle Off, and Increment.
 - **On / Off Values** — For buttons, with swap button
 - **Default Value** — For encoders and faders
 
